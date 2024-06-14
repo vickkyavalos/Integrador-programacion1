@@ -1,0 +1,86 @@
+[
+    {
+        "id": 1,
+        "placa": "ABC123",
+        "marca": "Toyota",
+        "modelo": "Corolla",
+        "tipoVehiculo": "Sedan",
+        "anio": 2015,
+        "kilometraje": 75000,
+        "precioCompra": 12000,
+        "precioVenta": 15000,
+        "estado": "Disponible"
+    },
+    {
+        "id": 2,
+        "placa": "XYZ789",
+        "marca": "Ford",
+        "modelo": "Focus",
+        "tipoVehiculo": "Hatchback",
+        "anio": 2017,
+        "kilometraje": 50000,
+        "precioCompra": 14000,
+        "precioVenta": 17000,
+        "estado": "Reservado"
+    },
+    {
+        "id": 3,
+        "placa": "POI990",
+        "marca": "toyota",
+        "modelo": "etios",
+        "tipoVehiculo": "auto compacto",
+        "anio": 2024,
+        "kilometraje": 100,
+        "precioCompra": 30000.0,
+        "precioVenta": 50000.0,
+        "estado": "Disponible"
+    },
+    {
+        "id": 4,
+        "placa": "XYT678",
+        "marca": "chevrolet",
+        "modelo": "onix",
+        "tipoVehiculo": "compactos",
+        "anio": 2020,
+        "kilometraje": 143987,
+        "precioCompra": 10000.0,
+        "precioVenta": 40000.0,
+        "estado": "Vendido"
+    },
+    {
+        "id": 5,
+        "placa": "YUT787",
+        "marca": "Chvrolet",
+        "modelo": "Camaro SS",
+        "tipoVehiculo": "Deportivo",
+        "anio": 2024,
+        "kilometraje": 2765,
+        "precioCompra": 90000.0,
+        "precioVenta": 110000.0,
+        "estado": "Disponible"
+    },
+    {
+        "id": 6,
+        "placa": "LKP980",
+        "marca": "Lamborghini",
+        "modelo": "Aventador",
+        "tipoVehiculo": "Deportivo",
+        "anio": 2024,
+        "kilometraje": 1000,
+        "precioCompra": 300000.0,
+        "precioVenta": 500000.0,
+        "estado": "Disponible"
+    },
+    {
+        "id": 7,
+        "placa": "YTR783",
+        "marca": "Toyota",
+        "modelo": "Hilux",
+        "tipoVehiculo": "Camioneta",
+        "anio": 2020,
+        "kilometraje": 1000,
+        "precioCompra": 60000.0,
+        "precioVenta": 80000.0,
+        "estado": "Reservado"
+    }
+]

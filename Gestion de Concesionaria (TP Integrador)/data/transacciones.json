@@ -1,0 +1,38 @@
+[
+    {
+        "id_transaccion": 1,
+        "id_vehiculo": 1,
+        "id_cliente": 1,
+        "tipo_transaccion": "Venta",
+        "fecha": "2024-01-15",
+        "monto": 15000,
+        "observaciones": "Venta realizada con exito."
+    },
+    {
+        "id_transaccion": 2,
+        "id_vehiculo": 2,
+        "id_cliente": 2,
+        "tipo_transaccion": "Compra",
+        "fecha": "2024-01-20",
+        "monto": 14000,
+        "observaciones": "Compra registrada."
+    },
+    {
+        "id_transaccion": 4,
+        "id_vehiculo": 3,
+        "id_cliente": 3,
+        "tipo_transaccion": "venta",
+        "fecha": "2003/09/12",
+        "monto": 20000.0,
+        "observaciones": "Venta registrada"
+    },
+    {
+        "id_transaccion": 4,
+        "id_vehiculo": 28,
+        "id_cliente": 7,
+        "tipo_transaccion": "Compra",
+        "fecha": "2037/98/01",
+        "monto": 100000.0,
+        "observaciones": "Compra registrada"
+    }
+]
