@@ -18,15 +18,6 @@
         "email": "maria.gomez@example.com"
     },
     {
-        "id": 3,
-        "nombre": "Juan",
-        "documento": "22456765",
-        "apellido": "Anacleto",
-        "direccion": "Leloir 765",
-        "celular": "123456789",
-        "email": "JuansitoA@gmail.com"
-    },
-    {
         "id": 4,
         "nombre": "Pedro",
         "documento": "22345765",
@@ -34,5 +25,23 @@
         "direccion": "Albaricoque 2145",
         "celular": "2997654532",
         "email": "PPP@cavernicola.com.piedra"
+    },
+    {
+        "id": 5,
+        "nombre": "Lucas",
+        "documento": "12345678",
+        "apellido": "pepe",
+        "direccion": "heizen 2876",
+        "celular": "1234500000",
+        "email": "asd@asd.com"
+    },
+    {
+        "id": 6,
+        "nombre": "Nico",
+        "documento": "123456789",
+        "apellido": "Cors",
+        "direccion": "atahualpa 2345",
+        "celular": "12345654332",
+        "email": "nicoCors@gmail.com"
     }
 ]
