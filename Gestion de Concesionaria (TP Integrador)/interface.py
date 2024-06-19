@@ -1,3 +1,5 @@
+import os
+import platform
 import sys
 from vehicle import Vehicle
 from customer import Customer
@@ -7,6 +9,7 @@ from validaciones import validadores
 from validaciones import validadoresClientes
 
 
+
 class InterfazConcesionario:
     def __init__(self):
         self.vehiculosDb = Database('data/vehiculos.json')
@@ -14,18 +17,30 @@ class InterfazConcesionario:
         self.transaccionesDb = Database('data/transacciones.json')
 
     # Funcion para validar entradas (Metodo)
-    def VerificacionDeEntrada(self, prompt, valorActual, funcValidacion, mensajeDeError, funcDeTransformacion=None):
+    def VerificacionDeEntrada(self, mensaje, valor_por_defecto, validador, mensaje_error):
         while True:
-            entradaUsuario = input(prompt)
-            if entradaUsuario == "":
-                return valorActual
-            if funcDeTransformacion:
-                entradaUsuario = funcDeTransformacion(entradaUsuario)
-            if funcValidacion(entradaUsuario):
-                return entradaUsuario
-            else:
-                print(mensajeDeError)
+            entrada = input(mensaje)
+            if entrada == "" and valor_por_defecto is not None:
+                return valor_por_defecto
+            
+            try:
+                # Intenta aplicar el validador a la entrada
+                if validador(entrada):
+                    # Si la entrada es válida según el validador, devuélvela
+                    return entrada
+                else:
+                    # Si la entrada no es válida, muestra un mensaje de error
+                    print(mensaje_error)
+            except ValueError:
+                # Si ocurre un error al convertir la entrada, muestra un mensaje de error
+                print(mensaje_error)
 
+    def limpiar_consola(self):
+        # Función para limpiar la consola según el sistema operativo
+        if platform.system() == "Windows":
+            os.system("cls")  # Comando para limpiar la consola en Windows
+        else:
+            os.system("clear")  # Comando para limpiar la consola en sistemas Unix (Linux, macOS, etc.)
 
     #Inicio del main menu
     def mainMenu(self):
@@ -55,10 +70,10 @@ class InterfazConcesionario:
     ##-Funciones para Vehiculos-##
     ##############################
     ##############################
-
-
+    
     #Inicio de funciones para vehiculos
     def modificarVehiculos(self):
+        self.limpiar_consola()
         while True:
             print("\n1. Crear Vehiculo")
             print("2. Editar Vehiculo")
@@ -80,23 +95,25 @@ class InterfazConcesionario:
                 print("Opcion invalida, por favor intente nuevamente.")
 
     def crearVehiculo(self):
+        self.limpiar_consola()
         # Solicitar datos y crear el vehiculo
-        placa = self.VerificacionDeEntrada("Ingrese la patente del vehiculo (ABC123): ", validadores.validarPlaca, "Patente invalida.", funcDeTransformacion=validadores.transformarPatente)
-        marca = self.VerificacionDeEntrada("Ingrese la marca del vehiculo: ", validadores.validarMarcaModelo, "Marca invalida.")
-        modelo = self.VerificacionDeEntrada("Ingrese el modelo del vehiculo: ", validadores.validarMarcaModelo, "Modelo invalido.")
-        tipoVehiculo = self.VerificacionDeEntrada("Ingrese el tipo del vehiculo (Sedán, SUV, Pick Up, etc): ", validadores.validarTipoVehiculo, "Tipo de vehiculo invalido.")
-        anio = self.VerificacionDeEntrada("Ingrese el año del vehiculo: ", validadores.validarAnio, "Año invalido. Debe ser un número entre 1886 y 2024.")
-        kilometraje = self.VerificacionDeEntrada("Ingrese el kilometraje del vehiculo: ", validadores.validarKilometraje, "Kilometraje invalido. Debe ser un número positivo.")
-        precioCompra = self.VerificacionDeEntrada("Ingrese el precio de compra del vehiculo: ", validadores.validarPrecio, "Precio de compra invalido. Debe ser un número positivo.")
-        precioVenta = self.VerificacionDeEntrada("Ingrese el precio de venta del vehiculo: ", validadores.validarPrecio, "Precio de venta invalido. Debe ser un número positivo.")
-        estado = self.VerificacionDeEntrada("Ingrese el estado del vehiculo (Disponible, Reservado, Vendido): ", validadores.validarEstado, "Estado invalido.", funcDeTransformacion=validadores.transformarEstado)
+        placa = self.VerificacionDeEntrada("Ingrese la patente del vehiculo (ABC123): ", "", validadores.validarPlaca, "Patente invalida.", funcDeTransformacion=validadores.transformarPatente)
+        marca = self.VerificacionDeEntrada("Ingrese la marca del vehiculo: ", "", validadores.validarMarcaModelo, "Marca invalida.")
+        modelo = self.VerificacionDeEntrada("Ingrese el modelo del vehiculo: ", "", validadores.validarMarcaModelo, "Modelo invalido.")
+        tipoVehiculo = self.VerificacionDeEntrada("Ingrese el tipo del vehiculo (Sedán, SUV, Pick Up, etc): ", "", validadores.validarTipoVehiculo, "Tipo de vehiculo invalido.")
+        anio = self.VerificacionDeEntrada("Ingrese el año del vehiculo: ", "", validadores.validarAnio, "Año invalido. Debe ser un número entre 1886 y 2024.")
+        kilometraje = self.VerificacionDeEntrada("Ingrese el kilometraje del vehiculo: ", "", validadores.validarKilometraje, "Kilometraje invalido. Debe ser un número positivo.")
+        precioCompra = self.VerificacionDeEntrada("Ingrese el precio de compra del vehiculo: ", "", validadores.validarPrecio, "Precio de compra invalido. Debe ser un número positivo.")
+        precioVenta = self.VerificacionDeEntrada("Ingrese el precio de venta del vehiculo: ", "", validadores.validarPrecio, "Precio de venta invalido. Debe ser un número positivo.")
+        estado = self.VerificacionDeEntrada("Ingrese el estado del vehiculo (Disponible, Reservado, Vendido): ", "", validadores.validarEstado, "Estado invalido.", funcDeTransformacion=validadores.transformarEstado)
 
-        vehiculoId = len(self.vehiculosDb.obtenerTodosLosRegistros()) + 1
+        vehiculoId = self.vehiculosDb.obtenerSiguienteId()
         nuevoVehiculo = Vehicle(vehiculoId, placa, marca, modelo, tipoVehiculo, int(anio), int(kilometraje), float(precioCompra), float(precioVenta), estado)
         self.vehiculosDb.agregarRegistro(nuevoVehiculo.a_dict())
         print("Vehiculo creado correctamente.")
 
     def editarVehiculo(self):
+        self.limpiar_consola()
         vehiculoId = int(input("Ingrese el ID del vehiculo a editar: "))
         vehiculo = self.vehiculosDb.buscarRegistrosPorId(vehiculoId)
         if vehiculo:
@@ -144,12 +161,14 @@ class InterfazConcesionario:
             print("Vehiculo no encontrado.")
 
     def eliminarVehiculo(self):
+        self.limpiar_consola()
         # Solicitar ID del vehiculo y eliminarlo
         vehiculoId = int(input("Ingrese el ID del vehiculo a eliminar: "))
         self.vehiculosDb.eliminarRegistro(vehiculoId)
         print("Vehiculo eliminado exitosamente.")
 
     def listarVehiculos(self):
+        self.limpiar_consola()
         vehiculos = self.vehiculosDb.obtenerTodosLosRegistros()
         if vehiculos:
             print("{:<5} {:<10} {:<10} {:<10} {:<15} {:<5} {:<12} {:<15} {:<15}".format(
@@ -183,6 +202,7 @@ class InterfazConcesionario:
     ###############################
 
     def administrarCustomers(self):
+        self.limpiar_consola()
         # similar a modificarVehiculos
         while True:
             print("\n1. Crear Cliente")
@@ -205,19 +225,21 @@ class InterfazConcesionario:
                 print("Opcion invalida, por favor intente nuevamente.")
 
     def crearCustomer(self):
-        nombre = self.VerificacionDeEntrada("Ingrese el nombre del cliente: ", validadoresClientes.validarNombre, "Nombre invalido. Solo se permiten letras.")
-        documento = self.VerificacionDeEntrada("Ingrese el documento del cliente: ", validadoresClientes.validarDocumento, "Documento invalido. Debe ser un número de 7, 8 o 9 dígitos.")
-        apellido = self.VerificacionDeEntrada("Ingrese el apellido del cliente: ", validadoresClientes.validarApellido, "Apellido invalido. Solo se permiten letras.")
-        direccion = self.VerificacionDeEntrada("Ingrese la direccion del cliente: ", validadoresClientes.validarDireccion, "Direccion invalida.")
-        celular = self.VerificacionDeEntrada("Ingrese el telefono del cliente: ", validadoresClientes.validarCelular, "Telefono invalido. Debe ser un número de 10 o 11 dígitos.")
-        email = self.VerificacionDeEntrada("Ingrese el correo electronico del cliente: ", validadoresClientes.validarEmail, "Correo electronico invalido.")
+        self.limpiar_consola()
+        nombre = self.VerificacionDeEntrada("Ingrese el nombre del cliente: ", "", validadoresClientes.validarNombre, "Nombre invalido. Solo se permiten letras.")
+        documento = self.VerificacionDeEntrada("Ingrese el documento del cliente: ", "", validadoresClientes.validarDocumento, "Documento invalido. Debe ser un número de 7, 8 o 9 dígitos.")
+        apellido = self.VerificacionDeEntrada("Ingrese el apellido del cliente: ", "", validadoresClientes.validarApellido, "Apellido invalido. Solo se permiten letras.")
+        direccion = self.VerificacionDeEntrada("Ingrese la direccion del cliente: ", "", validadoresClientes.validarDireccion, "Direccion invalida.")
+        celular = self.VerificacionDeEntrada("Ingrese el telefono del cliente: ", "", validadoresClientes.validarCelular, "Telefono invalido. Debe ser un número de 10 o 11 dígitos.")
+        email = self.VerificacionDeEntrada("Ingrese el correo electronico del cliente: ", "", validadoresClientes.validarEmail, "Correo electronico invalido.")
 
-        customerId = len(self.customDb.obtenerTodosLosRegistros()) + 1
+        customerId = self.customDb.obtenerSiguienteId()
         nuevoCustomer = Customer(customerId, nombre, documento, apellido, direccion, celular, email)
         self.customDb.agregarRegistro(nuevoCustomer.a_dict())
         print("Cliente creado exitosamente.")
 
     def listarClientes(self):
+        self.limpiar_consola()
         # Mostrar todos los clientes en formato de tabla
         clientes = self.customDb.obtenerTodosLosRegistros()
         if clientes:
@@ -272,50 +294,51 @@ class InterfazConcesionario:
             print("No hay clientes registrados.")
 
     def editarCustomer(self):
+        self.limpiar_consola()
         customerId = int(input("Ingrese el ID del cliente a editar: "))
         customer = self.customDb.buscarRegistrosPorId(customerId)
         if customer:
             print("Deje en blanco si no desea modificar el campo.")
 
             nombre = self.VerificacionDeEntrada(
-                f"Nombre actual ({customer['nombre']}): ", 
-                customer['nombre'], 
-                validadoresClientes.validarNombre, 
+                f"Nombre actual ({customer['nombre']}): ",
+                customer['nombre'],
+                validadoresClientes.validarNombre,
                 "Nombre invalido. Solo se permiten letras."
             )
-            
+
             documento = self.VerificacionDeEntrada(
-                f"Documento actual ({customer['documento']}): ", 
-                customer['documento'], 
-                validadoresClientes.validarDocumento, 
+                f"Documento actual ({customer['documento']}): ",
+                customer['documento'],
+                validadoresClientes.validarDocumento,
                 "Documento invalido. Debe ser un número de 7, 8 o 9 dígitos."
             )
-            
+
             apellido = self.VerificacionDeEntrada(
-                f"Apellido actual ({customer['apellido']}): ", 
-                customer['apellido'], 
-                validadoresClientes.validarApellido, 
+                f"Apellido actual ({customer['apellido']}): ",
+                customer['apellido'],
+                validadoresClientes.validarApellido,
                 "Apellido invalido. Solo se permiten letras."
             )
-            
+
             direccion = self.VerificacionDeEntrada(
-                f"Direccion actual ({customer['direccion']}): ", 
-                customer['direccion'], 
-                validadoresClientes.validarDireccion, 
+                f"Direccion actual ({customer['direccion']}): ",
+                customer['direccion'],
+                validadoresClientes.validarDireccion,
                 "Direccion invalida."
             )
-            
+
             celular = self.VerificacionDeEntrada(
-                f"Telefono actual ({customer['celular']}): ", 
-                customer['celular'], 
-                validadoresClientes.validarCelular, 
+                f"Telefono actual ({customer['celular']}): ",
+                customer['celular'],
+                validadoresClientes.validarCelular,
                 "Telefono invalido. Debe ser un número de 10 o 11 dígitos."
             )
-            
+
             email = self.VerificacionDeEntrada(
-                f"Correo electronico actual ({customer['email']}): ", 
-                customer['email'], 
-                validadoresClientes.validarEmail, 
+                f"Correo electronico actual ({customer['email']}): ",
+                customer['email'],
+                validadoresClientes.validarEmail,
                 "Correo electronico invalido."
             )
 
@@ -326,6 +349,7 @@ class InterfazConcesionario:
             print("Cliente no encontrado.")
 
     def eliminarCustomer(self):
+        self.limpiar_consola()
         customerId = int(input("Ingrese el ID del cliente a eliminar: "))
         self.customDb.eliminarRegistro(customerId)
         print("Cliente eliminado exitosamente.")
@@ -343,7 +367,7 @@ class InterfazConcesionario:
 
     #Inicio de funciones para transacciones
     def administrarTransacciones(self):
-
+        self.limpiar_consola()
         while True:
             print("\n1. Crear Transaccion")
             print("2. Listar Transacciones")
@@ -360,6 +384,8 @@ class InterfazConcesionario:
     
     def crearTransaccion(self):
         try:
+            self.limpiar_consola()
+
             id_transaccion = len(self.transaccionesDb.obtenerTodosLosRegistros()) + 1
             id_vehiculo = int(input("Ingrese el ID del vehículo: "))
             id_cliente = int(input("Ingrese el ID del cliente: "))
@@ -384,6 +410,8 @@ class InterfazConcesionario:
             print(f"Error en la entrada de datos: {e}")
     
     def listarTransacciones(self):
+        self.limpiar_consola()
+
         transacciones = self.transaccionesDb.obtenerTodosLosRegistros()
         if transacciones:
         # Calcular los anchos máximos de cada columna, incluyendo los encabezados
@@ -399,7 +427,7 @@ class InterfazConcesionario:
 
             # Imprimir encabezados de la tabla
             print("{:<{id_width}} {:<{vehiculo_width}} {:<{cliente_width}} {:<{tipo_width}} {:<{fecha_width}} {:<{monto_width}} {:<{obs_width}}".format(
-            "ID_Transaccion", "ID_Vehiculo", "ID_Cliente", "Tipo_Transaccion", "Fecha", "Monto", "Observaciones",
+            "ID-T", "ID-V", "ID-C", "Transaccion", "Fecha", "Monto", "Observaciones",
             id_width=max_lengths["ID_Transaccion"], vehiculo_width=max_lengths["ID_Vehiculo"],
             cliente_width=max_lengths["ID_Cliente"], tipo_width=max_lengths["Tipo_Transaccion"],
             fecha_width=max_lengths["Fecha"], monto_width=max_lengths["Monto"],
