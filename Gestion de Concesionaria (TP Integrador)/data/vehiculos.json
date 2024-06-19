@@ -82,5 +82,29 @@
         "precioCompra": 60000.0,
         "precioVenta": 80000.0,
         "estado": "Reservado"
+    },
+    {
+        "id": 8,
+        "placa": "lzk 980",
+        "marca": "chevrolet",
+        "modelo": "camaro",
+        "tipoVehiculo": "deportivo",
+        "anio": 2024,
+        "kilometraje": 0,
+        "precioCompra": 90000.0,
+        "precioVenta": 110000.0,
+        "estado": "Disponible"
+    },
+    {
+        "id": 9,
+        "placa": "xdy 770",
+        "marca": "Toyota",
+        "modelo": "etios",
+        "tipoVehiculo": "pick up",
+        "anio": 2010,
+        "kilometraje": 1,
+        "precioCompra": 10000.0,
+        "precioVenta": 25000.0,
+        "estado": "Disponible"
     }
 ]
