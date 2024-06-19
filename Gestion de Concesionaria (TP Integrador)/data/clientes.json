@@ -25,5 +25,14 @@
         "direccion": "Leloir 765",
         "celular": "123456789",
         "email": "JuansitoA@gmail.com"
+    },
+    {
+        "id": 4,
+        "nombre": "Pedro",
+        "documento": "22345765",
+        "apellido": "picaPiedras",
+        "direccion": "Albaricoque 2145",
+        "celular": "2997654532",
+        "email": "PPP@cavernicola.com.piedra"
     }
 ]

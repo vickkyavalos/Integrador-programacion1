@@ -4,6 +4,7 @@ from customer import Customer
 from transaction import Transaction
 from database import Database
 from validaciones import validadores
+from validaciones import validadoresClientes
 
 
 class InterfazConcesionario:
@@ -12,14 +13,16 @@ class InterfazConcesionario:
         self.customDb = Database('data/clientes.json')
         self.transaccionesDb = Database('data/transacciones.json')
 
-    # Funcion para validar entradas (PRUEBA)
-    def VerificacionDeEntrada(self, prompt, funcValidacion, mensajeDeError, funcDeTransformacion=None):
+    # Funcion para validar entradas (Metodo)
+    def VerificacionDeEntrada(self, prompt, valorActual, funcValidacion, mensajeDeError, funcDeTransformacion=None):
         while True:
-            user_input = input(prompt)
+            entradaUsuario = input(prompt)
+            if entradaUsuario == "":
+                return valorActual
             if funcDeTransformacion:
-                user_input = funcDeTransformacion(user_input)
-            if funcValidacion(user_input):
-                return user_input
+                entradaUsuario = funcDeTransformacion(entradaUsuario)
+            if funcValidacion(entradaUsuario):
+                return entradaUsuario
             else:
                 print(mensajeDeError)
 
@@ -87,17 +90,43 @@ class InterfazConcesionario:
         vehiculo = self.vehiculosDb.buscarRegistrosPorId(vehiculoId)
         if vehiculo:
             print("Deje en blanco si no desea modificar el campo.")
-            placa = input(f"Placa actual ({vehiculo.get('placa', 'N/A')}): ") or vehiculo.get('placa', 'N/A')
-            marca = input(f"Marca actual ({vehiculo.get('marca', 'N/A')}): ") or vehiculo.get('marca', 'N/A')
-            modelo = input(f"Modelo actual ({vehiculo.get('modelo', 'N/A')}): ") or vehiculo.get('modelo', 'N/A')
-            tipoVehiculo = input(f"Tipo actual ({vehiculo.get('tipoVehiculo', 'N/A')}): ") or vehiculo.get('tipoVehiculo', 'N/A')
-            anio = input(f"Año actual ({vehiculo.get('anio', 'N/A')}): ") or vehiculo.get('anio', 'N/A')
-            kilometraje = input(f"Kilometraje actual ({vehiculo.get('kilometraje', 'N/A')}): ") or vehiculo.get('kilometraje', 'N/A')
-            precioCompra = input(f"Precio de compra actual ({vehiculo.get('precioCompra', 'N/A')}): ") or vehiculo.get('precioCompra', 'N/A')
-            precioVenta = input(f"Precio de venta actual ({vehiculo.get('precioVenta', 'N/A')}): ") or vehiculo.get('precioVenta', 'N/A')
-            estado = input(f"Estado actual ({vehiculo.get('estado', 'N/A')}): ") or vehiculo.get('estado', 'N/A')
+            
+            campos = {
+                'placa': 'Placa',
+                'marca': 'Marca',
+                'modelo': 'Modelo',
+                'tipoVehiculo': 'Tipo de vehiculo',
+                'anio': 'Año',
+                'kilometraje': 'Kilometraje',
+                'precioCompra': 'Precio de compra',
+                'precioVenta': 'Precio de venta',
+                'estado': 'Estado'
+            }
+            
+            valores_actualizados = {}
+            for campo, descripcion in campos.items():
+                valor_actual = vehiculo.get(campo, 'N/A')
+                nuevo_valor = input(f"{descripcion} actual ({valor_actual}): ") or valor_actual
+                valores_actualizados[campo] = nuevo_valor
 
-            actualizarVehiculo = Vehicle(vehiculoId, placa, marca, modelo, tipoVehiculo, int(anio), int(kilometraje), float(precioCompra), float(precioVenta), estado)
+            # Convertir los valores que necesitan ser numéricos
+            valores_actualizados['anio'] = int(valores_actualizados['anio'])
+            valores_actualizados['kilometraje'] = int(valores_actualizados['kilometraje'])
+            valores_actualizados['precioCompra'] = float(valores_actualizados['precioCompra'])
+            valores_actualizados['precioVenta'] = float(valores_actualizados['precioVenta'])
+
+            actualizarVehiculo = Vehicle(
+                vehiculoId,
+                valores_actualizados['placa'],
+                valores_actualizados['marca'],
+                valores_actualizados['modelo'],
+                valores_actualizados['tipoVehiculo'],
+                valores_actualizados['anio'],
+                valores_actualizados['kilometraje'],
+                valores_actualizados['precioCompra'],
+                valores_actualizados['precioVenta'],
+                valores_actualizados['estado']
+            )
             self.vehiculosDb.actualizarRegistro(vehiculoId, actualizarVehiculo.a_dict())
             print("Vehiculo actualizado exitosamente.")
         else:
@@ -157,12 +186,12 @@ class InterfazConcesionario:
                 print("Opcion invalida, por favor intente nuevamente.")
 
     def crearCustomer(self):
-        nombre = input("Ingrese el nombre del cliente: ")
-        documento = input("Ingrese el documento del cliente: ")
-        apellido = input("Ingrese el apellido del cliente: ")
-        direccion = input("Ingrese la direccion del cliente: ")
-        celular = input("Ingrese el telefono del cliente: ")
-        email = input("Ingrese el correo electronico del cliente: ")
+        nombre = self.VerificacionDeEntrada("Ingrese el nombre del cliente: ", validadoresClientes.validarNombre, "Nombre invalido. Solo se permiten letras.")
+        documento = self.VerificacionDeEntrada("Ingrese el documento del cliente: ", validadoresClientes.validarDocumento, "Documento invalido. Debe ser un número de 7, 8 o 9 dígitos.")
+        apellido = self.VerificacionDeEntrada("Ingrese el apellido del cliente: ", validadoresClientes.validarApellido, "Apellido invalido. Solo se permiten letras.")
+        direccion = self.VerificacionDeEntrada("Ingrese la direccion del cliente: ", validadoresClientes.validarDireccion, "Direccion invalida.")
+        celular = self.VerificacionDeEntrada("Ingrese el telefono del cliente: ", validadoresClientes.validarCelular, "Telefono invalido. Debe ser un número de 10 o 11 dígitos.")
+        email = self.VerificacionDeEntrada("Ingrese el correo electronico del cliente: ", validadoresClientes.validarEmail, "Correo electronico invalido.")
 
         customerId = len(self.customDb.obtenerTodosLosRegistros()) + 1
         nuevoCustomer = Customer(customerId, nombre, documento, apellido, direccion, celular, email)
@@ -228,12 +257,48 @@ class InterfazConcesionario:
         customer = self.customDb.buscarRegistrosPorId(customerId)
         if customer:
             print("Deje en blanco si no desea modificar el campo.")
-            nombre = input(f"Nombre actual ({customer['nombre']}): ") or customer['nombre']
-            documento = input(f"Documento actual ({customer['documento']}): ") or customer['documento']
-            apellido = input(f"Apellido actual ({customer['apellido']}): ") or customer['apellido']
-            direccion = input(f"Direccion actual ({customer['direccion']}): ") or customer['direccion']
-            celular = input(f"Telefono actual ({customer['celular']}): ") or customer['celular']
-            email = input(f"Correo electronico actual ({customer['email']}): ") or customer['email']
+
+            nombre = self.VerificacionDeEntrada(
+                f"Nombre actual ({customer['nombre']}): ", 
+                customer['nombre'], 
+                validadoresClientes.validarNombre, 
+                "Nombre invalido. Solo se permiten letras."
+            )
+            
+            documento = self.VerificacionDeEntrada(
+                f"Documento actual ({customer['documento']}): ", 
+                customer['documento'], 
+                validadoresClientes.validarDocumento, 
+                "Documento invalido. Debe ser un número de 7, 8 o 9 dígitos."
+            )
+            
+            apellido = self.VerificacionDeEntrada(
+                f"Apellido actual ({customer['apellido']}): ", 
+                customer['apellido'], 
+                validadoresClientes.validarApellido, 
+                "Apellido invalido. Solo se permiten letras."
+            )
+            
+            direccion = self.VerificacionDeEntrada(
+                f"Direccion actual ({customer['direccion']}): ", 
+                customer['direccion'], 
+                validadoresClientes.validarDireccion, 
+                "Direccion invalida."
+            )
+            
+            celular = self.VerificacionDeEntrada(
+                f"Telefono actual ({customer['celular']}): ", 
+                customer['celular'], 
+                validadoresClientes.validarCelular, 
+                "Telefono invalido. Debe ser un número de 10 o 11 dígitos."
+            )
+            
+            email = self.VerificacionDeEntrada(
+                f"Correo electronico actual ({customer['email']}): ", 
+                customer['email'], 
+                validadoresClientes.validarEmail, 
+                "Correo electronico invalido."
+            )
 
             actualizarCustomer = Customer(customerId, nombre, documento, apellido, direccion, celular, email)
             self.customDb.actualizarRegistro(customerId, actualizarCustomer.a_dict())

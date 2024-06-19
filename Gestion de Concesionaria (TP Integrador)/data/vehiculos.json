@@ -106,5 +106,17 @@
         "precioCompra": 10000.0,
         "precioVenta": 25000.0,
         "estado": "Disponible"
+    },
+    {
+        "id": 10,
+        "placa": "LKP123",
+        "marca": "Volkswagen",
+        "modelo": "sirocco",
+        "tipoVehiculo": "Pick Up",
+        "anio": 2020,
+        "kilometraje": 1,
+        "precioCompra": 5000.0,
+        "precioVenta": 12000.0,
+        "estado": "Reservado"
     }
 ]
