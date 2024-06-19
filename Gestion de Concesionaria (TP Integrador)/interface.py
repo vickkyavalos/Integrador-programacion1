@@ -3,6 +3,7 @@ from vehicle import Vehicle
 from customer import Customer
 from transaction import Transaction
 from database import Database
+from validaciones import validadores
 
 
 class InterfazConcesionario:
@@ -12,14 +13,14 @@ class InterfazConcesionario:
         self.transaccionesDb = Database('data/transacciones.json')
 
     # Funcion para validar entradas (PRUEBA)
-    def VerificacionDeEntrada(self, promt, funcValidacion, mensajeDeError):
+    def VerificacionDeEntrada(self, prompt, funcValidacion, mensajeDeError, funcDeTransformacion=None):
         while True:
-            entradaDeUsuario = input(promt)
-            try:
-                if funcValidacion:
-                    return funcValidacion(entradaDeUsuario)
-                return entradaDeUsuario
-            except ValueError:
+            user_input = input(prompt)
+            if funcDeTransformacion:
+                user_input = funcDeTransformacion(user_input)
+            if funcValidacion(user_input):
+                return user_input
+            else:
                 print(mensajeDeError)
 
 
@@ -66,18 +67,18 @@ class InterfazConcesionario:
 
     def crearVehiculo(self):
         # Solicitar datos y crear el vehiculo
-        placa = self.VerificacionDeEntrada("Ingrese la patente del vehiculo: ", None, "Patente invalida.")
-        marca = self.VerificacionDeEntrada("Ingrese la marca del vehiculo: ", None, "Marca invalida.")
-        modelo = self.VerificacionDeEntrada("Ingrese el modelo del vehiculo: ", None, "Modelo invalido.")
-        tipoVehiculo = self.VerificacionDeEntrada("Ingrese el tipo del vehiculo (Sedán, SUV, Pick Up, etc): ", None, "Tipo de vehiculo invalido.")
-        anio = self.VerificacionDeEntrada("Ingrese el año del vehiculo: ", int, "Año invalido. Debe ser un número.")
-        kilometraje = self.VerificacionDeEntrada("Ingrese el kilometraje del vehiculo: ", int, "Kilometraje invalido. Debe ser un número.")
-        precioCompra = self.VerificacionDeEntrada("Ingrese el precio de compra del vehiculo: ", float, "Precio de compra invalido. Debe ser un número.")
-        precioVenta = self.VerificacionDeEntrada("Ingrese el precio de venta del vehiculo: ", float, "Precio de venta invalido. Debe ser un número.")
-        estado = self.VerificacionDeEntrada("Ingrese el estado del vehiculo (Disponible, Reservado, Vendido): ", None, "Estado invalido.")
+        placa = self.VerificacionDeEntrada("Ingrese la patente del vehiculo (ABC123): ", validadores.validarPlaca, "Patente invalida.", funcDeTransformacion=validadores.transformarPatente)
+        marca = self.VerificacionDeEntrada("Ingrese la marca del vehiculo: ", validadores.validarMarcaModelo, "Marca invalida.")
+        modelo = self.VerificacionDeEntrada("Ingrese el modelo del vehiculo: ", validadores.validarMarcaModelo, "Modelo invalido.")
+        tipoVehiculo = self.VerificacionDeEntrada("Ingrese el tipo del vehiculo (Sedán, SUV, Pick Up, etc): ", validadores.validarTipoVehiculo, "Tipo de vehiculo invalido.")
+        anio = self.VerificacionDeEntrada("Ingrese el año del vehiculo: ", validadores.validarAnio, "Año invalido. Debe ser un número entre 1886 y 2024.")
+        kilometraje = self.VerificacionDeEntrada("Ingrese el kilometraje del vehiculo: ", validadores.validarKilometraje, "Kilometraje invalido. Debe ser un número positivo.")
+        precioCompra = self.VerificacionDeEntrada("Ingrese el precio de compra del vehiculo: ", validadores.validarPrecio, "Precio de compra invalido. Debe ser un número positivo.")
+        precioVenta = self.VerificacionDeEntrada("Ingrese el precio de venta del vehiculo: ", validadores.validarPrecio, "Precio de venta invalido. Debe ser un número positivo.")
+        estado = self.VerificacionDeEntrada("Ingrese el estado del vehiculo (Disponible, Reservado, Vendido): ", validadores.validarEstado, "Estado invalido.", funcDeTransformacion=validadores.transformarEstado)
 
         vehiculoId = len(self.vehiculosDb.obtenerTodosLosRegistros()) + 1
-        nuevoVehiculo = Vehicle(vehiculoId, placa, marca, modelo, tipoVehiculo, anio, kilometraje, precioCompra, precioVenta, estado)
+        nuevoVehiculo = Vehicle(vehiculoId, placa, marca, modelo, tipoVehiculo, int(anio), int(kilometraje), float(precioCompra), float(precioVenta), estado)
         self.vehiculosDb.agregarRegistro(nuevoVehiculo.a_dict())
         print("Vehiculo creado correctamente.")
 
