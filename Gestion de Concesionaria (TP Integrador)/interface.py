@@ -46,6 +46,17 @@ class InterfazConcesionario:
             else:
                 print("Opcion invalida, por favor intentelo nuevamente.")
 
+
+
+
+
+    ##############################
+    ##############################
+    ##-Funciones para Vehiculos-##
+    ##############################
+    ##############################
+
+
     #Inicio de funciones para vehiculos
     def modificarVehiculos(self):
         while True:
@@ -159,10 +170,18 @@ class InterfazConcesionario:
                 ))
         else:
             print("No hay vehiculos registrados.")
-
     #Fin de funciones para vehiculos
 
-    #Inicio de funciones para customers
+    
+
+
+
+    ###############################
+    ###############################
+    ###-Funciones para Clientes-###
+    ###############################
+    ###############################
+
     def administrarCustomers(self):
         # similar a modificarVehiculos
         while True:
@@ -311,6 +330,16 @@ class InterfazConcesionario:
         self.customDb.eliminarRegistro(customerId)
         print("Cliente eliminado exitosamente.")
     #Fin de funciones para customers
+
+
+
+
+
+    ##############################
+    ##############################
+    #Funciones para Transacciones#
+    ##############################
+    ##############################
 
     #Inicio de funciones para transacciones
     def administrarTransacciones(self):
