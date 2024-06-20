@@ -44,3 +44,9 @@ class Database:
             if registro.get('id') == registroId:
                 return registro
         return None
+    
+    def obtenerSiguienteId(self):
+        if not self.data:
+            return 1
+        ultimoId = max(registro['id'] for registro in self.data)
+        return ultimoId + 1
