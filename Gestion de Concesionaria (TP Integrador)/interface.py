@@ -17,23 +17,20 @@ class InterfazConcesionario:
         self.transaccionesDb = Database('data/transacciones.json')
 
     # Funcion para validar entradas (Metodo)
-    def VerificacionDeEntrada(self, mensaje, valor_por_defecto, validador, mensaje_error):
+    def VerificacionDeEntrada(self, mensaje, valor_por_defecto, funcion_de_validacion, mensaje_de_error, funcDeTransformacion=None):
         while True:
             entrada = input(mensaje)
-            if entrada == "" and valor_por_defecto is not None:
-                return valor_por_defecto
-            
+            if entrada == "":
+                entrada = valor_por_defecto
             try:
-                # Intenta aplicar el validador a la entrada
-                if validador(entrada):
-                    # Si la entrada es válida según el validador, devuélvela
+                if funcDeTransformacion:
+                    entrada = funcDeTransformacion(entrada)
+                if funcion_de_validacion(entrada):
                     return entrada
                 else:
-                    # Si la entrada no es válida, muestra un mensaje de error
-                    print(mensaje_error)
+                    print(mensaje_de_error)
             except ValueError:
-                # Si ocurre un error al convertir la entrada, muestra un mensaje de error
-                print(mensaje_error)
+                print(mensaje_de_error)
 
     def limpiar_consola(self):
         # Función para limpiar la consola según el sistema operativo
