@@ -118,5 +118,17 @@
         "precioCompra": 20000.0,
         "precioVenta": 60000.0,
         "estado": "Reservado"
+    },
+    {
+        "id": 12,
+        "placa": "LDK132",
+        "marca": "Ford",
+        "modelo": "ka",
+        "tipoVehiculo": "Pick Up",
+        "anio": 2015,
+        "kilometraje": 24000,
+        "precioCompra": 8000.0,
+        "precioVenta": 15000.0,
+        "estado": "Disponible"
     }
 ]
