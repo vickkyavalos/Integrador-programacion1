@@ -463,10 +463,8 @@ class InterfazConcesionario:
     #################################
     def mostrarVehiculos(self, vehiculos):
         if not vehiculos:
-            print("No se encontraron vehiculos.")
+            print("No se encontraron vehículos.")
             return
-        for vehiculo in vehiculos:
-            print(f"Patente: {vehiculo.get('placa')}, Marca: {vehiculo.get('marca')}, Modelo: {vehiculo.get('modelo')}, Año: {vehiculo.get('año')}, Precio: {vehiculo.get('precio')}, Estado: {vehiculo.get('estado')}")
 
     
     def busquedaAvanzada(self):
