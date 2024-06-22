@@ -6,7 +6,25 @@ class Database:
         self.rutaDeArchivo = rutaDeArchivo
         self.data = self.cargarData()
 
+    #FUNCION NUEVA PARA LA CARGA DE DATOS DE LOS JSON
     def cargarData(self):
+        if os.path.exists(self.rutaDeArchivo):
+            try:
+                with open(self.rutaDeArchivo, 'r', encoding='utf-8') as file:
+                    data = json.load(file)
+                    # Convertir campos numéricos de string a int o float si es necesario
+                    for vehiculo in data:
+                        vehiculo['anio'] = int(vehiculo['anio']) if 'anio' in vehiculo and isinstance(vehiculo['anio'], (int, str)) else None
+                        vehiculo['precioVenta'] = float(vehiculo['precioVenta']) if 'precioVenta' in vehiculo and isinstance(vehiculo['precioVenta'], (float, int, str)) else None
+                    return data
+            except (json.JSONDecodeError, ValueError) as e:
+                print(f"Error al cargar datos JSON: {e}")
+                return []  # Archivo está vacío o no es un JSON válido
+        else:
+            return []
+        
+    #FUNCION ANTIGUA PARA CARGAR DATOS DE LOS JSON
+    """def cargarData(self):
         if os.path.exists(self.rutaDeArchivo):
             try:
                 with open(self.rutaDeArchivo, 'r', encoding='utf-8') as file:
@@ -14,7 +32,7 @@ class Database:
             except json.JSONDecodeError:
                 return []  # Archivo está vacío o no es un JSON válido
         else:
-            return []
+            return []"""
 
     def guardarData(self):
         with open(self.rutaDeArchivo, 'w', encoding='utf-8') as file:
@@ -50,3 +68,29 @@ class Database:
             return 1
         ultimoId = max(registro['id'] for registro in self.data)
         return ultimoId + 1
+    
+
+    #PARTE DE BUSQUEDA AVANZADA
+    def buscarPorMarca(self, marca):
+        return [vehiculo for vehiculo in self.data if vehiculo.get('marca').lower() == marca.lower()]
+
+    def buscarPorEstado(self, estado):
+        return [vehiculo for vehiculo in self.data if vehiculo.get('estado').lower() == estado.lower()]
+
+    def buscarPorRangoDePrecio(self, precio_min, precio_max, estado=None):
+        resultados = []
+        for vehiculo in self.data:
+            precio_venta = vehiculo.get('precioVenta', None)
+            estado_vehiculo = vehiculo.get('estado', None)
+            if isinstance(precio_venta, (int, float)) and precio_min <= precio_venta <= precio_max:
+                if estado is None or estado_vehiculo == estado:
+                    resultados.append(vehiculo)
+        
+        print(f"Vehículos encontrados en el rango de precio [{precio_min}, {precio_max}] y estado '{estado}':")
+        for vehiculo in resultados:
+            print(f"Patente: {vehiculo['placa']}, Marca: {vehiculo['marca']}, Modelo: {vehiculo['modelo']}, Año: {vehiculo['anio']}, Precio: {vehiculo['precioVenta']}, Estado: {vehiculo['estado']}")
+        
+        return resultados
+
+    def buscarPorRangoDePrecioYEstado(self, precio_min, precio_max, estado):
+        return [vehiculo for vehiculo in self.data if precio_min <= vehiculo.get('precio', 0) <= precio_max and vehiculo.get('estado').lower() == estado.lower()]
