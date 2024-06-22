@@ -21,7 +21,10 @@ class InterfazConcesionario:
         while True:
             entrada = input(mensaje)
             if entrada == "":
-                entrada = valor_por_defecto
+                if valor_por_defecto is None:
+                    return None
+                else:
+                    entrada = valor_por_defecto
             try:
                 if funcDeTransformacion:
                     entrada = funcDeTransformacion(entrada)
@@ -45,8 +48,9 @@ class InterfazConcesionario:
             print("\n1. Gestionar Vehiculos")
             print("2. Gestionar Clientes")
             print("3. Registrar Transaccion")
-            print("4. Salir")
-            choice = input("Seleccione una opcion: ")
+            print("4. Busqueda avanzada de vehiculos")
+            print("5. Salir")
+            choice = self.VerificacionDeEntrada("Seleccione una opción (1-5): ", None, lambda x: x in ["1", "2", "3", "4", "5"], "Opción inválida.")
             if choice == '1':
                 self.modificarVehiculos()
             elif choice == '2':
@@ -54,6 +58,8 @@ class InterfazConcesionario:
             elif choice == '3':
                 self.administrarTransacciones()
             elif choice == '4':
+                self.busquedaAvanzada()
+            elif choice == '5':
                 sys.exit()
             else:
                 print("Opcion invalida, por favor intentelo nuevamente.")
@@ -291,7 +297,7 @@ class InterfazConcesionario:
             print("No hay clientes registrados.")
 
     def editarCustomer(self):
-        self.limpiar_consola()
+        #self.limpiar_consola() FRAGMENTO PARA LIMPIAR CONSOLA
         customerId = int(input("Ingrese el ID del cliente a editar: "))
         customer = self.customDb.buscarRegistrosPorId(customerId)
         if customer:
@@ -450,6 +456,73 @@ class InterfazConcesionario:
         else:
             print("No hay transacciones registradas.")  
     #Fin de funciones para transacciones
+
+
+    #################################
+    #FUNCIONES PARA BUSQUEDA AVANZADA
+    #################################
+    def mostrarVehiculos(self, vehiculos):
+        if not vehiculos:
+            print("No se encontraron vehiculos.")
+            return
+        for vehiculo in vehiculos:
+            print(f"Patente: {vehiculo.get('placa')}, Marca: {vehiculo.get('marca')}, Modelo: {vehiculo.get('modelo')}, Año: {vehiculo.get('año')}, Precio: {vehiculo.get('precio')}, Estado: {vehiculo.get('estado')}")
+
+    
+    def busquedaAvanzada(self):
+        while True:
+            try: 
+                print("\nOpciones de busqueda avanzada.")
+                print("1. Buscar por marca")
+                print("2. Buscar por estado (Disponible, Reservado, Vendido)")
+                print("3. Buscar por rango de precio")
+                print("4. Buscar por rango de precio y estado")
+                print("5. Volver al menu principal")
+                opcion = self.VerificacionDeEntrada("Seleccione una opcion (1-5): ", None, lambda x: x in ["1", "2", "3", "4", "5"], "Opcion invalida.")
+                
+                if opcion == "1":
+                    marca = self.VerificacionDeEntrada("Ingrese la marca (deje en blanco para volver): ", None, lambda x: x == "" or x.isalpha(), "Marca invalida.")
+                    if marca == "":
+                        return #Volvemos al menu anterior
+                    resultados = self.vehiculosDb.buscarPorMarca(marca)
+                    self.mostrarVehiculos(resultados)
+                
+                elif opcion == "2":
+                    estado = self.VerificacionDeEntrada("Ingrese el estado (Disponible, Reservado, Vendido) (deje en blanco para volver): ", None, lambda x: x == "" or x.lower() in ["disponible", "reservado", "vendido"], "Estado inválido.")
+                    if estado == "":
+                        return #Volver al menu anterior
+                    resultados = self.vehiculosDb.buscarPorEstado(estado)
+                    self.mostrarVehiculos(resultados)
+
+                elif opcion == "3":
+                    precioMinimo = self.VerificacionDeEntrada("Ingrese el precio minimo (deja en blanco para volver): ", None, lambda x: x == "" or x.isdigit(), "Precio mínimo inválido.")
+                    if precioMinimo == "":
+                        return #Volver al menu anterior
+                    precioMaximo = self.VerificacionDeEntrada("Ingrese el precio maximo (deje en blanco para volver): ", None, lambda x: x == "" or x.isdigit(), "Precio máximo inválido.")
+                    if precioMaximo == "":
+                        return #Volver al menu anterior
+                    resultados = self.vehiculosDb.buscarPorRangoDePrecio(int(precioMinimo), int(precioMaximo))
+                    self.mostrarVehiculos(resultados)
+
+                elif opcion == "4":
+                    precio_min = self.VerificacionDeEntrada("Ingrese el precio mínimo (deje en blanco para volver): ", None, lambda x: x == "" or x.isdigit(), "Precio mínimo inválido.")
+                    if precio_min == "":
+                            return  # Volver al menú anterior
+                    precio_max = self.VerificacionDeEntrada("Ingrese el precio máximo (deje en blanco para volver): ", None, lambda x: x == "" or x.isdigit(), "Precio máximo inválido.")
+                    if precio_max == "":
+                        return  # Volver al menú anterior
+                    estado = self.VerificacionDeEntrada("Ingrese el estado (Disponible, Reservado, Vendido) (deje en blanco para volver): ", None, lambda x: x == "" or x.lower() in ["disponible", "reservado", "vendido"], "Estado inválido.")
+                    if estado == "":
+                        return  # Volver al menú anterior
+                    resultados = self.vehiculosDb.buscarPorRangoDePrecio(int(precio_min), int(precio_max), estado)
+                    self.mostrarVehiculos(resultados)
+
+                elif opcion == "5":
+                    return #Volver al menu principal
+                
+            except ValueError as e:
+                print(f"Error en la entrada de datos: {e}")
+
 
 
 
