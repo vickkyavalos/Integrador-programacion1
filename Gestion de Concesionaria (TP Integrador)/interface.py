@@ -66,8 +66,6 @@ class InterfazConcesionario:
 
 
 
-
-
     ##############################
     ##############################
     ##-Funciones para Vehiculos-##
@@ -195,8 +193,6 @@ class InterfazConcesionario:
     #Fin de funciones para vehiculos
 
     
-
-
 
     ###############################
     ###############################
@@ -360,8 +356,6 @@ class InterfazConcesionario:
 
 
 
-
-
     ##############################
     ##############################
     #Funciones para Transacciones#
@@ -465,7 +459,6 @@ class InterfazConcesionario:
         if not vehiculos:
             print("No se encontraron vehículos.")
             return
-
     
     def busquedaAvanzada(self):
         while True:
@@ -532,9 +525,6 @@ class InterfazConcesionario:
                 
             except ValueError as e:
                 print(f"Error en la entrada de datos: {e}")
-
-
-
 
 
 if __name__ == "__main__":
