@@ -494,12 +494,24 @@ class InterfazConcesionario:
 
                 elif opcion == "3":
                     precioMinimo = self.VerificacionDeEntrada("Ingrese el precio minimo (deja en blanco para volver): ", None, lambda x: x == "" or x.isdigit(), "Precio mínimo inválido.")
-                    if precioMinimo == "":
-                        return #Volver al menu anterior
+                    if precioMinimo is None:
+                        return  # Volver al menu anterior
                     precioMaximo = self.VerificacionDeEntrada("Ingrese el precio maximo (deje en blanco para volver): ", None, lambda x: x == "" or x.isdigit(), "Precio máximo inválido.")
-                    if precioMaximo == "":
-                        return #Volver al menu anterior
-                    resultados = self.vehiculosDb.buscarPorRangoDePrecio(int(precioMinimo), int(precioMaximo))
+                    if precioMaximo is None:
+                        return  # Volver al menu anterior
+
+                    # Convertir a int solo si no es cadena vacía (es decir, si el usuario ingresó un valor numérico)
+                    if precioMinimo.strip():  # strip() para asegurarse de no convertir una cadena completamente vacía
+                        precioMinimo = int(precioMinimo)
+                    else:
+                        precioMinimo = None  # Convertir a None si está vacío
+
+                    if precioMaximo.strip():
+                        precioMaximo = int(precioMaximo)
+                    else:
+                        precioMaximo = None  # Convertir a None si está vacío
+
+                    resultados = self.vehiculosDb.buscarPorRangoDePrecio(precioMinimo, precioMaximo)
                     self.mostrarVehiculos(resultados)
 
                 elif opcion == "4":
