@@ -8,7 +8,7 @@
         "anio": 2015,
         "kilometraje": 75000,
         "precioCompra": 12000,
-        "precioVenta": 15000,
+        "precioVenta": 15000.0,
         "estado": "Disponible"
     },
     {
@@ -20,7 +20,7 @@
         "anio": 2017,
         "kilometraje": 50000,
         "precioCompra": 14000,
-        "precioVenta": 17000,
+        "precioVenta": 17000.0,
         "estado": "Reservado"
     },
     {
@@ -129,6 +129,18 @@
         "kilometraje": 24000,
         "precioCompra": 8000.0,
         "precioVenta": 15000.0,
+        "estado": "Disponible"
+    },
+    {
+        "id": 13,
+        "placa": "ZPT187",
+        "marca": "Chevrolet",
+        "modelo": "Camaro",
+        "tipoVehiculo": "Sed\u00e1n",
+        "anio": 2024,
+        "kilometraje": 1,
+        "precioCompra": 90000.0,
+        "precioVenta": 110000.0,
         "estado": "Disponible"
     }
 ]
