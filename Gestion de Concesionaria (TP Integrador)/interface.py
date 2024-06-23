@@ -1,5 +1,6 @@
 import os
 import platform
+import re
 import sys
 from vehicle import Vehicle
 from customer import Customer
@@ -45,27 +46,30 @@ class InterfazConcesionario:
     #Inicio del main menu
     def mainMenu(self):
         while True:
-            print("\n1. Gestionar Vehiculos")
+            print("\n1. Gestionar Vehículos")
             print("2. Gestionar Clientes")
-            print("3. Registrar Transaccion")
-            print("4. Busqueda avanzada de vehiculos")
-            print("5. Busqueda avanzada de clientes")
-            print("6. Salir")
-            choice = self.VerificacionDeEntrada("Seleccione una opción (1-6): ", None, lambda x: x in ["1", "2", "3", "4", "5", "6"], "Opción inválida.")
+            print("3. Registrar Transacción")
+            print("4. Búsqueda avanzada de vehículos")
+            print("5. Búsqueda avanzada de clientes")
+            print("6. Búsqueda avanzada de transacciones")
+            print("7. Salir")
+            choice = self.VerificacionDeEntrada("Seleccione una opción (1-7): ", None, lambda x: x in ["1", "2", "3", "4", "5", "6", "7"], "Opción inválida.")
             if choice == '1':
                 self.modificarVehiculos()
             elif choice == '2':
-                self.administrarCustomers()
+                self.administrarClientes()
             elif choice == '3':
                 self.administrarTransacciones()
             elif choice == '4':
-                self.busquedaAvanzada()
+                self.busquedaAvanzadaVehiculos()
             elif choice == '5':
                 self.busquedaAvanzadaClientes()
             elif choice == '6':
+                self.busquedaAvanzadaTransacciones()
+            elif choice == '7':
                 sys.exit()
             else:
-                print("Opcion invalida, por favor intentelo nuevamente.")
+                print("Opción inválida, por favor intentelo nuevamente.")
 
 
     ##############################
@@ -581,6 +585,82 @@ class InterfazConcesionario:
 
             except ValueError as e:
                 print(f"Error en la entrada de datos: {e}")
+
+
+    ###############################
+    #FUNCIONES DE BUSQUEDA AVANZADA
+    ###PARA________TRANSACCIONES###
+    def busquedaAvanzadaTransacciones(self):
+        while True:
+            try:
+                print("\nOpciones de búsqueda avanzada para transacciones.")
+                print("1. Buscar por tipo de transacción")
+                print("2. Buscar por rango de fechas")
+                print("3. Buscar por rango de montos")
+                print("4. Buscar por ID de vehículo")
+                print("5. Buscar por ID de cliente")
+                print("6. Volver al menú principal")
+                opcion = self.VerificacionDeEntrada("Seleccione una opción (1-6): ", None, lambda x: x in ["1", "2", "3", "4", "5", "6"], "Opción inválida.")
+
+                if opcion == "1":
+                    tipo = self.VerificacionDeEntrada("Ingrese el tipo de transacción (venta/compra) (deje en blanco para volver): ", None, lambda x: x.lower() in ["venta", "compra", ""], "Tipo de transacción inválido.")
+                    if tipo == "":
+                        return
+                    tipo = tipo.capitalize()  # Capitalizar para que coincida con el formato en el JSON
+                    resultados = self.transaccionesDb.buscarPorTipoTransaccion(tipo)
+                    self.mostrarTransacciones(resultados)
+
+                elif opcion == "2":
+                    fecha_inicio = self.VerificacionDeEntrada("Ingrese la fecha de inicio (YYYY-MM-DD): ", None, lambda x: bool(re.match(r'\d{4}-\d{2}-\d{2}', x)), "Fecha inválida.")
+                    fecha_fin = self.VerificacionDeEntrada("Ingrese la fecha de fin (YYYY-MM-DD): ", None, lambda x: bool(re.match(r'\d{4}-\d{2}-\d{2}', x)), "Fecha inválida.")
+                    resultados = self.transaccionesDb.buscarPorRangoFecha(fecha_inicio, fecha_fin)
+                    self.mostrarTransacciones(resultados)
+
+                elif opcion == "3":
+                    monto_min = self.VerificacionDeEntrada("Ingrese el monto mínimo: ", None, lambda x: x.isdigit(), "Monto inválido.")
+                    monto_max = self.VerificacionDeEntrada("Ingrese el monto máximo: ", None, lambda x: x.isdigit(), "Monto inválido.")
+                    resultados = self.transaccionesDb.buscarPorRangoMonto(float(monto_min), float(monto_max))
+                    self.mostrarTransacciones(resultados)
+
+                elif opcion == "4":
+                    id_vehiculo = self.VerificacionDeEntrada("Ingrese el ID del vehículo: ", None, lambda x: x.isdigit(), "ID inválido.")
+                    resultados = self.transaccionesDb.buscarPorIDVehiculo(int(id_vehiculo))
+                    self.mostrarTransacciones(resultados)
+
+                elif opcion == "5":
+                    id_cliente = self.VerificacionDeEntrada("Ingrese el ID del cliente: ", None, lambda x: x.isdigit(), "ID inválido.")
+                    resultados = self.transaccionesDb.buscarPorIDCliente(int(id_cliente))
+                    self.mostrarTransacciones(resultados)
+
+                elif opcion == "6":
+                    return
+
+            except ValueError as e:
+                print(f"Error en la entrada de datos: {e}")
+
+    def mostrarTransacciones(self, transacciones):
+        if not transacciones:
+            print("No se encontraron transacciones.")
+            return
+        
+        for transaccion in transacciones:
+            id_transaccion = transaccion.get('id_transaccion', 'N/A')
+            id_vehiculo = transaccion.get('id_vehiculo', 'N/A')
+            id_cliente = transaccion.get('id_cliente', 'N/A')
+            tipo_transaccion = transaccion.get('tipo_transaccion', 'N/A')
+            fecha = transaccion.get('fecha', 'N/A')
+            monto = transaccion.get('monto', 'N/A')
+            observaciones = transaccion.get('observaciones', 'N/A')
+            print(f"\nTransacción:")
+            print(f"  ID Transacción: {id_transaccion}")
+            print(f"  ID Vehículo: {id_vehiculo}")
+            print(f"  ID Cliente: {id_cliente}")
+            print(f"  Tipo de Transacción: {tipo_transaccion}")
+            print(f"  Fecha: {fecha}")
+            print(f"  Monto: {monto}")
+            print(f"  Observaciones: {observaciones}")
+
+
 
 
 
