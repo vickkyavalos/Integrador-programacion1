@@ -7,6 +7,10 @@ from transaction import Transaction
 from database import Database
 from validaciones import validadores
 from validaciones import validadoresClientes
+from rich.console import Console
+from rich.table import Table
+from rich.panel import Panel
+from rich.prompt import Prompt
 
 
 
@@ -43,57 +47,90 @@ class InterfazConcesionario:
             os.system("clear")  # Comando para limpiar la consola en sistemas Unix (Linux, macOS, etc.)
 
     #Inicio del main menu
-    def mainMenu(self):
-        while True:
-            print("\n1. Gestionar Vehiculos")
-            print("2. Gestionar Clientes")
-            print("3. Registrar Transaccion")
-            print("4. Busqueda avanzada de vehiculos")
-            print("5. Salir")
-            choice = self.VerificacionDeEntrada("Seleccione una opción (1-5): ", None, lambda x: x in ["1", "2", "3", "4", "5"], "Opción inválida.")
-            if choice == '1':
-                self.modificarVehiculos()
-            elif choice == '2':
-                self.administrarCustomers()
-            elif choice == '3':
-                self.administrarTransacciones()
-            elif choice == '4':
-                self.busquedaAvanzada()
-            elif choice == '5':
-                sys.exit()
-            else:
-                print("Opcion invalida, por favor intentelo nuevamente.")
-
-
-
-    ##############################
-    ##############################
-    ##-Funciones para Vehiculos-##
-    ##############################
-    ##############################
+        console = Console()
+        console.print 
+        (Panel("Sistema de Gestión de Concesionaria de Vehículos Usados", style="bold magenta", padding=(1, 2)))
     
-    #Inicio de funciones para vehiculos
+    def mainMenu(self):
+     console = Console()
+
+     while True:
+        console.clear()
+        
+
+        table = Table(show_header=True, header_style="bold cyan")
+        table.add_column("Opción", style="dim", width=12)
+        table.add_column("Descripción")
+
+        table.add_row("1", "Gestionar Vehículos")
+        table.add_row("2", "Gestionar Clientes")
+        table.add_row("3", "Registrar Transacción")
+        table.add_row("4", "Busqueda avanzada de vehiculos") 
+        table.add_row("5", "Salir")
+
+        console.print(table)
+
+        choice = Prompt.ask("Seleccione una opción", choices=["1", "2", "3", "4", "5"], default="5")
+        if choice == '1':
+            self.modificarVehiculos()
+        elif choice == '2':
+            self.administrarCustomers()
+        elif choice == '3':
+            self.administrarTransacciones()
+        elif choice == '4':
+            self.busquedaAvanzada()
+        elif choice == '5':
+            console.print("Saliendo del sistema... [bold red]¡Adiós![/bold red]", style="bold yellow")
+            sys.exit()
+        else:
+            console.print("Opción inválida, por favor inténtelo nuevamente.", style="bold red")
+
     def modificarVehiculos(self):
-        self.limpiar_consola()
-        while True:
-            print("\n1. Crear Vehiculo")
-            print("2. Editar Vehiculo")
-            print("3. Eliminar Vehiculo")
-            print("4. Listar Vehiculos")
-            print("5. Volver al menu principal")
-            choice = input("Seleccione una opcion: ")
-            if choice == '1':
-                self.crearVehiculo()
-            elif choice == '2':
-                self.editarVehiculo()
-            elif choice == '3':
-                self.eliminarVehiculo()
-            elif choice == '4':
-                self.listarVehiculos()
-            elif choice == '5':
-                return
-            else:
-                print("Opcion invalida, por favor intente nuevamente.")
+     console = Console()
+
+     while True:
+        console.clear()
+        console.print (Panel("Sistema de Gestión de Vehiculos", style="bold magenta", padding=(1, 2), width=43))
+
+        table = Table(show_header=True, header_style="bold cyan")
+        table.add_column("Opción", style="dim", width=12)
+        table.add_column("Descripción")
+
+        table.add_row("1", "Crear vehiculo")
+        table.add_row("2", "Editar Vehiculo")
+        table.add_row("3", "Eliminar Veiculos")
+        table.add_row("4", "Listar Veiculos")
+        table.add_row("5", "Volver al manu principal")
+
+        console.print(table)
+
+        choice = Prompt.ask("Seleccione una opción", choices=["1", "2", "3", "4", "5"], default="5")
+
+        if choice == '1':
+            self.crearVehiculo()
+        elif choice == '2':
+            self.editarVehiculo()
+        elif choice == '3':
+            self.eliminarVehiculo()
+        elif choice == '4':
+            self.listarVehiculos()
+        elif choice == '5':
+            return
+        else:
+            console.print("Opción inválida, por favor inténtelo nuevamente.", style="bold red")
+
+
+
+
+##############################
+##############################
+##-Funciones para Vehiculos-##
+##############################
+##############################
+
+# Inicio de funciones para vehiculos
+
+
 
     def crearVehiculo(self):
         self.limpiar_consola()
@@ -201,15 +238,27 @@ class InterfazConcesionario:
     ###############################
 
     def administrarCustomers(self):
-        self.limpiar_consola()
-        # similar a modificarVehiculos
+        console = Console()
+
         while True:
-            print("\n1. Crear Cliente")
-            print("2. Editar Cliente")
-            print("3. Eliminar Cliente")
-            print("4. Listar Clientes")
-            print("5. Volver al Menu Principal")
-            choice = input("Seleccione una opcion: ")
+            console.clear()
+            console.print \
+            (Panel("Sistema de Gestión de Clientes", style="bold magenta", padding=(1, 1), width=43))
+
+            table = Table(show_header=True, header_style="bold cyan")
+            table.add_column("Opción", style="dim", width=12)
+            table.add_column("Descripción")
+
+            table.add_row("1", "Crear Cliente")
+            table.add_row("2", "Editar Cliente")
+            table.add_row("3", "Eliminar Clientes")
+            table.add_row("4", "Listar Cliente")
+            table.add_row("5", "Volver al manu principal")
+
+            console.print(table)
+
+            choice = Prompt.ask("Seleccione una opción", choices=["1", "2", "3", "4", "5"], default="5")
+
             if choice == '1':
                 self.crearCustomer()
             elif choice == '2':
@@ -221,7 +270,7 @@ class InterfazConcesionario:
             elif choice == '5':
                 return
             else:
-                print("Opcion invalida, por favor intente nuevamente.")
+             console.print("Opción inválida, por favor inténtelo nuevamente.", style="bold red")
 
     def crearCustomer(self):
         self.limpiar_consola()
@@ -364,12 +413,24 @@ class InterfazConcesionario:
 
     #Inicio de funciones para transacciones
     def administrarTransacciones(self):
-        self.limpiar_consola()
+        console = Console()
         while True:
-            print("\n1. Crear Transaccion")
-            print("2. Listar Transacciones")
-            print("3. Volver al Menu Principal")
-            choice = input("Seleccione una opcion: ")
+            console.clear()
+            console.print \
+            (Panel("Sistema de Gestión de Transacciones", style="bold magenta", padding=(1, 1), width=43))
+
+            table = Table(show_header=True, header_style="bold cyan")
+            table.add_column("Opción", style="dim", width=12)
+            table.add_column("Descripción")
+
+            table.add_row("1", "Crear Transaccion")
+            table.add_row("2", "Listar Transacciones")
+            table.add_row("3", "Volver al manu principal")
+            
+            console.print(table)
+
+            choice = Prompt.ask("Seleccione una opción", choices=["1", "2", "3"], default="3")
+
             if choice == '1':
                 self.crearTransaccion()
             elif choice == '2':
@@ -377,7 +438,8 @@ class InterfazConcesionario:
             elif choice == '3':
                 return
             else:
-                print("Opcion invalida, por favor intente nuevamente.")
+             console.print("Opción inválida, por favor inténtelo nuevamente.", style="bold red")
+
     
     def crearTransaccion(self):
         try:
