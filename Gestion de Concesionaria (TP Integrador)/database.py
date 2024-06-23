@@ -139,3 +139,31 @@ class Database:
             if cliente.get('documento') == dni:
                 resultados.append(cliente)
         return resultados
+    
+
+
+    #PARTE DE BUSQUEDA AVANZADA DE TRANSACCIONES
+    ############################################
+    def buscarPorTipoTransaccion(self, tipo):
+        resultados = [transaccion for transaccion in self.data if transaccion.get('tipo_transaccion') == tipo]
+        return resultados
+
+    def buscarPorRangoFecha(self, fecha_inicio, fecha_fin):
+        resultados = []
+        for transaccion in self.data:
+            fecha_transaccion = transaccion.get('fecha')
+            if fecha_inicio <= fecha_transaccion <= fecha_fin:
+                resultados.append(transaccion)
+        return resultados
+
+    def buscarPorRangoMonto(self, monto_min, monto_max):
+        resultados = [transaccion for transaccion in self.data if monto_min <= transaccion.get('monto', 0) <= monto_max]
+        return resultados
+
+    def buscarPorIDVehiculo(self, id_vehiculo):
+        resultados = [transaccion for transaccion in self.data if transaccion.get('id_vehiculo') == id_vehiculo]
+        return resultados
+
+    def buscarPorIDCliente(self, id_cliente):
+        resultados = [transaccion for transaccion in self.data if transaccion.get('id_cliente') == id_cliente]
+        return resultados
