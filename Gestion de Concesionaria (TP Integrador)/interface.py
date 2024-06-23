@@ -459,50 +459,59 @@ class InterfazConcesionario:
         if not vehiculos:
             print("No se encontraron vehículos.")
             return
+
+        for vehiculo in vehiculos:
+            patente = vehiculo.get('placa', 'N/A')
+            marca = vehiculo.get('marca', 'N/A')
+            modelo = vehiculo.get('modelo', 'N/A')
+            anio = vehiculo.get('anio', 'No disponible')
+            precio = vehiculo.get('precioVenta', 'No disponible')
+            estado = vehiculo.get('estado', 'N/A')
+
+            print(f"Patente: {patente}, Marca: {marca}, Modelo: {modelo}, Año: {anio}, Precio: {precio}, Estado: {estado}")
     
     def busquedaAvanzada(self):
         while True:
             try: 
-                print("\nOpciones de busqueda avanzada.")
+                print("\nOpciones de búsqueda avanzada.")
                 print("1. Buscar por marca")
                 print("2. Buscar por estado (Disponible, Reservado, Vendido)")
                 print("3. Buscar por rango de precio")
                 print("4. Buscar por rango de precio y estado")
-                print("5. Volver al menu principal")
-                opcion = self.VerificacionDeEntrada("Seleccione una opcion (1-5): ", None, lambda x: x in ["1", "2", "3", "4", "5"], "Opcion invalida.")
+                print("5. Volver al menú principal")
+                opcion = self.VerificacionDeEntrada("Seleccione una opción (1-5): ", None, lambda x: x in ["1", "2", "3", "4", "5"], "Opción inválida.")
                 
                 if opcion == "1":
-                    marca = self.VerificacionDeEntrada("Ingrese la marca (deje en blanco para volver): ", None, lambda x: x == "" or x.isalpha(), "Marca invalida.")
+                    marca = self.VerificacionDeEntrada("Ingrese la marca (deje en blanco para volver): ", None, lambda x: x == "" or x.isalpha(), "Marca inválida.")
                     if marca == "":
-                        return #Volvemos al menu anterior
+                        return # Volvemos al menú anterior
                     resultados = self.vehiculosDb.buscarPorMarca(marca)
                     self.mostrarVehiculos(resultados)
                 
                 elif opcion == "2":
                     estado = self.VerificacionDeEntrada("Ingrese el estado (Disponible, Reservado, Vendido) (deje en blanco para volver): ", None, lambda x: x == "" or x.lower() in ["disponible", "reservado", "vendido"], "Estado inválido.")
                     if estado == "":
-                        return #Volver al menu anterior
+                        return # Volver al menú anterior
                     resultados = self.vehiculosDb.buscarPorEstado(estado)
                     self.mostrarVehiculos(resultados)
 
                 elif opcion == "3":
-                    precioMinimo = self.VerificacionDeEntrada("Ingrese el precio minimo (deja en blanco para volver): ", None, lambda x: x == "" or x.isdigit(), "Precio mínimo inválido.")
+                    precioMinimo = self.VerificacionDeEntrada("Ingrese el precio mínimo (deje en blanco para volver): ", None, lambda x: x == "" or x.isdigit(), "Precio mínimo inválido.")
                     if precioMinimo is None:
-                        return  # Volver al menu anterior
-                    precioMaximo = self.VerificacionDeEntrada("Ingrese el precio maximo (deje en blanco para volver): ", None, lambda x: x == "" or x.isdigit(), "Precio máximo inválido.")
+                        return  # Volver al menú anterior
+                    precioMaximo = self.VerificacionDeEntrada("Ingrese el precio máximo (deje en blanco para volver): ", None, lambda x: x == "" or x.isdigit(), "Precio máximo inválido.")
                     if precioMaximo is None:
-                        return  # Volver al menu anterior
+                        return  # Volver al menú anterior
 
-                    # Convertir a int solo si no es cadena vacía (es decir, si el usuario ingresó un valor numérico)
-                    if precioMinimo.strip():  # strip() para asegurarse de no convertir una cadena completamente vacía
+                    if precioMinimo.strip():
                         precioMinimo = int(precioMinimo)
                     else:
-                        precioMinimo = None  # Convertir a None si está vacío
+                        precioMinimo = None
 
                     if precioMaximo.strip():
                         precioMaximo = int(precioMaximo)
                     else:
-                        precioMaximo = None  # Convertir a None si está vacío
+                        precioMaximo = None
 
                     resultados = self.vehiculosDb.buscarPorRangoDePrecio(precioMinimo, precioMaximo)
                     self.mostrarVehiculos(resultados)
@@ -521,7 +530,7 @@ class InterfazConcesionario:
                     self.mostrarVehiculos(resultados)
 
                 elif opcion == "5":
-                    return #Volver al menu principal
+                    return # Volver al menú principal
                 
             except ValueError as e:
                 print(f"Error en la entrada de datos: {e}")
