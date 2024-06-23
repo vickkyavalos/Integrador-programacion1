@@ -49,12 +49,25 @@ class InterfazConcesionario:
 
     #Inicio del main menu
     def mainMenu(self):
+
+        console = Console()
+        
+        panel = Panel("Sistema de Gestión de Concesionaria de Vehículos Usados", style="bold magenta", padding=(1, 2),
+        expand=True)
+        console.print(panel, justify="center")
+
         while True:
-            print("\n1. Gestionar Vehiculos")
-            print("2. Gestionar Clientes")
-            print("3. Registrar Transaccion")
-            print("4. Busqueda avanzada de vehiculos")
-            print("5. Salir")
+            
+            table = Table(show_header=True, header_style="bold blue")
+            table.add_column("Opción", style="dim", width=12)
+            table.add_column("Descripción")
+            table.add_row("1", "Gestionar Vehículos")
+            table.add_row("2", "Gestionar Clientes")
+            table.add_row("3", "Registrar Transacción")
+            table.add_row("4", "Busqueda avanzada de vehiculos") 
+            table.add_row("5", "Salir")
+            console.print(table)
+
             choice = self.VerificacionDeEntrada("Seleccione una opción (1-5): ", None, lambda x: x in ["1", "2", "3", "4", "5"], "Opción inválida.")
             if choice == '1':
                 self.modificarVehiculos()
@@ -65,10 +78,10 @@ class InterfazConcesionario:
             elif choice == '4':
                 self.busquedaAvanzada()
             elif choice == '5':
+                console.print("Saliendo del sistema... [bold red]¡Adiós![/bold red]", style="bold yellow")
                 sys.exit()
             else:
-                print("Opcion invalida, por favor intentelo nuevamente.")
-
+                console.print("Opción inválida, por favor inténtelo nuevamente.", style="bold red")
 
 
     ##############################
@@ -80,14 +93,19 @@ class InterfazConcesionario:
     #Inicio de funciones para vehiculos
     def modificarVehiculos(self):
         
-
         self.limpiar_consola()
         while True:
-            print("\n1. Crear Vehiculo")
-            print("2. Editar Vehiculo")
-            print("3. Eliminar Vehiculo")
-            print("4. Listar Vehiculos")
-            print("5. Volver al menu principal")
+
+            table = Table(show_header=True, header_style="bold blue")
+            table.add_column("Opción", style="dim", width=12)
+            table.add_column("Descripción")
+            table.add_row("1", "Crear Vehiculo")
+            table.add_row("2", "Editar Vehiculo")
+            table.add_row("3", "Eliminar Vehiculo")
+            table.add_row("4", "Listar Vehiculos") 
+            table.add_row("5", "Volver al menu principal")
+            console.print(table)
+           
             choice = input("Seleccione una opcion: ")
             if choice == '1':
                 self.crearVehiculo()
@@ -169,6 +187,9 @@ class InterfazConcesionario:
             console.print("Vehiculo no encontrado.",style="bold red")
 
     def eliminarVehiculo(self):
+
+        console = Console()
+
         self.limpiar_consola()
         # Solicitar ID del vehiculo y eliminarlo
         vehiculoId = int(input("Ingrese el ID del vehiculo a eliminar: "))
@@ -177,6 +198,7 @@ class InterfazConcesionario:
 
     def listarVehiculos(self):
         self.limpiar_consola()
+
         vehiculos = self.vehiculosDb.obtenerTodosLosRegistros()
         if vehiculos:
             table = Table(show_header=True, header_style="bold blue")
@@ -216,11 +238,17 @@ class InterfazConcesionario:
         self.limpiar_consola()
         # similar a modificarVehiculos
         while True:
-            print("\n1. Crear Cliente")
-            print("2. Editar Cliente")
-            print("3. Eliminar Cliente")
-            print("4. Listar Clientes")
-            print("5. Volver al Menu Principal")
+
+            table = Table(show_header=True, header_style="bold blue")
+            table.add_column("Opción", style="dim", width=12)
+            table.add_column("Descripción")
+            table.add_row("1", "Crear Cliente")
+            table.add_row("2", "Editar Cliente")
+            table.add_row("3", "Eliminar Cliente")
+            table.add_row("4", "Listar Clientes") 
+            table.add_row("5", "Volver al Menu Principal")
+            console.print(table)
+
             choice = input("Seleccione una opcion: ")
             if choice == '1':
                 self.crearCustomer()
@@ -237,6 +265,7 @@ class InterfazConcesionario:
 
     def crearCustomer(self):
         self.limpiar_consola()
+
         nombre = self.VerificacionDeEntrada("Ingrese el nombre del cliente: ", "", validadoresClientes.validarNombre, "Nombre invalido. Solo se permiten letras.")
         documento = self.VerificacionDeEntrada("Ingrese el documento del cliente: ", "", validadoresClientes.validarDocumento, "Documento invalido. Debe ser un número de 7, 8 o 9 dígitos.")
         apellido = self.VerificacionDeEntrada("Ingrese el apellido del cliente: ", "", validadoresClientes.validarApellido, "Apellido invalido. Solo se permiten letras.")
@@ -330,17 +359,16 @@ class InterfazConcesionario:
 
             actualizarCustomer = Customer(customerId, nombre, documento, apellido, direccion, celular, email)
             self.customDb.actualizarRegistro(customerId, actualizarCustomer.a_dict())
-            print("Cliente actualizado exitosamente.")
+            console.print("Cliente actualizado exitosamente.",style="bold green")
         else:
-            print("Cliente no encontrado.")
+            console.print("Cliente no encontrado.",style="bold red")
 
     def eliminarCustomer(self):
         self.limpiar_consola()
         customerId = int(input("Ingrese el ID del cliente a eliminar: "))
         self.customDb.eliminarRegistro(customerId)
-        print("Cliente eliminado exitosamente.")
+        console.print("Cliente eliminado exitosamente.",style="bold green")
     #Fin de funciones para customers
-
 
 
     ##############################
@@ -353,9 +381,14 @@ class InterfazConcesionario:
     def administrarTransacciones(self):
         self.limpiar_consola()
         while True:
-            print("\n1. Crear Transaccion")
-            print("2. Listar Transacciones")
-            print("3. Volver al Menu Principal")
+            table = Table(show_header=True, header_style="bold blue")
+            table.add_column("Opción", style="dim", width=12)
+            table.add_column("Descripción")
+            table.add_row("1", "Crear Transaccion")
+            table.add_row("2", "Listar Transacciones")
+            table.add_row("3", "Volver al Menu Principal")
+            console.print(table)
+
             choice = input("Seleccione una opcion: ")
             if choice == '1':
                 self.crearTransaccion()
@@ -364,7 +397,7 @@ class InterfazConcesionario:
             elif choice == '3':
                 return
             else:
-                print("Opcion invalida, por favor intente nuevamente.")
+                console.print("Opcion invalida, por favor intente nuevamente.",style="bold red")
     
     def crearTransaccion(self):
         try:
@@ -389,9 +422,9 @@ class InterfazConcesionario:
             }
 
             self.transaccionesDb.agregarRegistro(nueva_transaccion)
-            print("Transacción creada exitosamente.")
+            console.print("Transacción creada exitosamente.",style="bold green")
         except ValueError as e:
-            print(f"Error en la entrada de datos: {e}")
+            console.print(f"Error en la entrada de datos: {e}", style="bold red")
     
     def listarTransacciones(self):
         console = Console()
@@ -430,18 +463,23 @@ class InterfazConcesionario:
     #################################
     def mostrarVehiculos(self, vehiculos):
         if not vehiculos:
-            print("No se encontraron vehículos.")
+            console.print("No se encontraron vehículos.",style="bold red")
             return
     
     def busquedaAvanzada(self):
         while True:
             try: 
-                print("\nOpciones de busqueda avanzada.")
-                print("1. Buscar por marca")
-                print("2. Buscar por estado (Disponible, Reservado, Vendido)")
-                print("3. Buscar por rango de precio")
-                print("4. Buscar por rango de precio y estado")
-                print("5. Volver al menu principal")
+                
+                table = Table(show_header=True, header_style="bold blue")
+                table.add_column("Opción", style="dim", width=12)
+                table.add_column("Descripción")
+                table.add_row("1", "Buscar por marca")
+                table.add_row("2", "Buscar por estado (Disponible, Reservado, Vendido)")
+                table.add_row("3", "Buscar por rango de precio")
+                table.add_row("4", " Buscar por rango de precio y estado")
+                table.add_row("5", "Volver al menu principal")
+                console.print(table)
+
                 opcion = self.VerificacionDeEntrada("Seleccione una opcion (1-5): ", None, lambda x: x in ["1", "2", "3", "4", "5"], "Opcion invalida.")
                 
                 if opcion == "1":
@@ -497,7 +535,7 @@ class InterfazConcesionario:
                     return #Volver al menu principal
                 
             except ValueError as e:
-                print(f"Error en la entrada de datos: {e}")
+                console.print(f"Error en la entrada de datos: {e}", style="bold red")
 
 
 if __name__ == "__main__":
