@@ -49,8 +49,9 @@ class InterfazConcesionario:
             print("2. Gestionar Clientes")
             print("3. Registrar Transaccion")
             print("4. Busqueda avanzada de vehiculos")
-            print("5. Salir")
-            choice = self.VerificacionDeEntrada("Seleccione una opción (1-5): ", None, lambda x: x in ["1", "2", "3", "4", "5"], "Opción inválida.")
+            print("5. Busqueda avanzada de clientes")
+            print("6. Salir")
+            choice = self.VerificacionDeEntrada("Seleccione una opción (1-6): ", None, lambda x: x in ["1", "2", "3", "4", "5", "6"], "Opción inválida.")
             if choice == '1':
                 self.modificarVehiculos()
             elif choice == '2':
@@ -60,10 +61,11 @@ class InterfazConcesionario:
             elif choice == '4':
                 self.busquedaAvanzada()
             elif choice == '5':
+                self.busquedaAvanzadaClientes()
+            elif choice == '6':
                 sys.exit()
             else:
                 print("Opcion invalida, por favor intentelo nuevamente.")
-
 
 
     ##############################
@@ -454,6 +456,7 @@ class InterfazConcesionario:
 
     #################################
     #FUNCIONES PARA BUSQUEDA AVANZADA
+    ###DE_______________VEHICULOS####
     #################################
     def mostrarVehiculos(self, vehiculos):
         if not vehiculos:
@@ -534,6 +537,51 @@ class InterfazConcesionario:
                 
             except ValueError as e:
                 print(f"Error en la entrada de datos: {e}")
+
+    ################################
+    #FUNCIONES DE BUSQUEDA AVANZADA#
+    ###PARA____________CLIENTES#####
+    def mostrarClientes(self, clientes):
+        if not clientes:
+            print("No se encontraron clientes.")
+            return
+        
+        for cliente in clientes:
+            print("Cliente:")
+            for key, value in cliente.items():
+                if value is not None:
+                    print(f"  {key.capitalize()}: {value}")
+            print()  # Línea en blanco para separar clientes
+
+    def busquedaAvanzadaClientes(self):
+        while True:
+            try:
+                print("\nOpciones de búsqueda avanzada de clientes.")
+                print("1. Buscar por nombre")
+                print("2. Buscar por DNI")
+                print("3. Volver al menú principal")
+                opcion = self.VerificacionDeEntrada("Seleccione una opción (1-3): ", None, lambda x: x in ["1", "2", "3"], "Opción inválida.")
+
+                if opcion == "1":
+                    nombre = self.VerificacionDeEntrada("Ingrese el nombre o apellido (deje en blanco para volver): ", None, lambda x: x == "" or x.isalpha(), "Nombre inválido.")
+                    if nombre == "":
+                        return  # Volvemos al menú anterior
+                    resultados = self.customDb.buscarPorNombre(nombre)
+                    self.mostrarClientes(resultados)
+
+                elif opcion == "2":
+                    dni = self.VerificacionDeEntrada("Ingrese el DNI (deje en blanco para volver): ", None, lambda x: x == "" or x.isdigit(), "DNI inválido.")
+                    if dni == "":
+                        return  # Volvemos al menú anterior
+                    resultados = self.customDb.buscarPorDNI(dni)
+                    self.mostrarClientes(resultados)
+
+                elif opcion == "3":
+                    return  # Volver al menú principal
+
+            except ValueError as e:
+                print(f"Error en la entrada de datos: {e}")
+
 
 
 if __name__ == "__main__":
