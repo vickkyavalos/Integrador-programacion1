@@ -117,18 +117,6 @@ class Database:
                             resultados[index]['precioVenta'] = vehiculo['precioVenta']
                         break
 
-        # Imprimimos los resultados encontrados
-        print(f"Vehículos encontrados en el rango de precio [{precio_min}, {precio_max}] y estado '{estado}':")
-        for vehiculo in resultados:
-            patente = vehiculo.get('placa', 'N/A')
-            marca = vehiculo.get('marca', 'N/A')
-            modelo = vehiculo.get('modelo', 'N/A')
-            anio = vehiculo.get('anio', 'No disponible')
-            precio = vehiculo.get('precioVenta', 'No disponible')
-            estado = vehiculo.get('estado', 'N/A')
-
-            print(f"Patente: {patente}, Marca: {marca}, Modelo: {modelo}, Año: {anio}, Precio: {precio}, Estado: {estado}")
-
         return resultados
 
 
