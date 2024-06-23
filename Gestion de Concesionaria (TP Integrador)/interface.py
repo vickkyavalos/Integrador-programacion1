@@ -7,8 +7,13 @@ from transaction import Transaction
 from database import Database
 from validaciones import validadores
 from validaciones import validadoresClientes
+from rich.console import Console  #Para la interffaz
+from rich.panel import Panel
+from rich import print
+from rich.table import Table
+from rich.panel import Panel
 
-
+console = Console()
 
 class InterfazConcesionario:
     def __init__(self):
@@ -74,6 +79,8 @@ class InterfazConcesionario:
     
     #Inicio de funciones para vehiculos
     def modificarVehiculos(self):
+        
+
         self.limpiar_consola()
         while True:
             print("\n1. Crear Vehiculo")
@@ -93,7 +100,7 @@ class InterfazConcesionario:
             elif choice == '5':
                 return
             else:
-                print("Opcion invalida, por favor intente nuevamente.")
+                console.print("Opcion invalida, por favor intente nuevamente.", style="bold red")
 
     def crearVehiculo(self):
         self.limpiar_consola()
@@ -111,14 +118,14 @@ class InterfazConcesionario:
         vehiculoId = self.vehiculosDb.obtenerSiguienteId()
         nuevoVehiculo = Vehicle(vehiculoId, placa, marca, modelo, tipoVehiculo, int(anio), int(kilometraje), float(precioCompra), float(precioVenta), estado)
         self.vehiculosDb.agregarRegistro(nuevoVehiculo.a_dict())
-        print("Vehiculo creado correctamente.")
+        console.print("Vehiculo creado correctamente.",style="bold green")
 
     def editarVehiculo(self):
         self.limpiar_consola()
         vehiculoId = int(input("Ingrese el ID del vehiculo a editar: "))
         vehiculo = self.vehiculosDb.buscarRegistrosPorId(vehiculoId)
         if vehiculo:
-            print("Deje en blanco si no desea modificar el campo.")
+            print(Panel("Deje en blanco si no desea modificar el campo."))
             
             campos = {
                 'placa': 'Placa',
@@ -157,42 +164,47 @@ class InterfazConcesionario:
                 valores_actualizados['estado']
             )
             self.vehiculosDb.actualizarRegistro(vehiculoId, actualizarVehiculo.a_dict())
-            print("Vehiculo actualizado exitosamente.")
+            console.print("Vehiculo actualizado exitosamente.",style="bold green")
         else:
-            print("Vehiculo no encontrado.")
+            console.print("Vehiculo no encontrado.",style="bold red")
 
     def eliminarVehiculo(self):
         self.limpiar_consola()
         # Solicitar ID del vehiculo y eliminarlo
         vehiculoId = int(input("Ingrese el ID del vehiculo a eliminar: "))
         self.vehiculosDb.eliminarRegistro(vehiculoId)
-        print("Vehiculo eliminado exitosamente.")
+        console.print("Vehiculo eliminado exitosamente.",style="bold green")
 
     def listarVehiculos(self):
         self.limpiar_consola()
         vehiculos = self.vehiculosDb.obtenerTodosLosRegistros()
         if vehiculos:
-            print("{:<5} {:<10} {:<10} {:<10} {:<15} {:<5} {:<12} {:<15} {:<15}".format(
-                "ID", "Placa", "Marca", "Modelo", "Tipo", "Año", "Kilometraje", "Precio Compra", "Precio Venta"
-            ))
-            print("=" * 100)
+            table = Table(show_header=True, header_style="bold blue")
+            table.add_column("ID", style="dim", width=5)
+            table.add_column("Placa", style="dim", width=10)
+            table.add_column("Marca", style="dim", width=10)
+            table.add_column("Modelo", style="dim", width=10)
+            table.add_column("Tipo", style="dim", width=15)
+            table.add_column("Año", style="dim", width=5)
+            table.add_column("Kilometraje", style="dim", width=12)
+            table.add_column("Precio Compra", style="dim", width=15, justify="right")
+            table.add_column("Precio Venta", style="dim", width=15, justify="right")
+            
             for vehiculo in vehiculos:
-                print("{:<5} {:<10} {:<10} {:<10} {:<15} {:<5} {:<12} {:<15} {:<15}".format(
-                    vehiculo.get('id', 'N/A'),
+                table.add_row(
+                    str(vehiculo.get('id', 'N/A')),
                     vehiculo.get('placa', 'N/A'),
                     vehiculo.get('marca', 'N/A'),
                     vehiculo.get('modelo', 'N/A'),
                     vehiculo.get('tipoVehiculo', 'N/A'),
-                    vehiculo.get('anio', 'N/A'),
-                    vehiculo.get('kilometraje', 'N/A'),
-                    vehiculo.get('precioCompra', 'N/A'),
-                    vehiculo.get('precioVenta', 'N/A')
-                ))
+                    str(vehiculo.get('anio', 'N/A')),
+                    str(vehiculo.get('kilometraje', 'N/A')),
+                    f"${vehiculo.get('precioCompra', 'N/A')}",
+                    f"${vehiculo.get('precioVenta', 'N/A')}"
+            )
+            console.print(table)
         else:
-            print("No hay vehiculos registrados.")
-    #Fin de funciones para vehiculos
-
-    
+            console.print("No hay vehiculos registrados.", style="bold red")
 
     ###############################
     ###############################
@@ -221,7 +233,7 @@ class InterfazConcesionario:
             elif choice == '5':
                 return
             else:
-                print("Opcion invalida, por favor intente nuevamente.")
+                print("Opcion invalida, por favor intente nuevamente.", style= "bold red")
 
     def crearCustomer(self):
         self.limpiar_consola()
@@ -235,7 +247,7 @@ class InterfazConcesionario:
         customerId = self.customDb.obtenerSiguienteId()
         nuevoCustomer = Customer(customerId, nombre, documento, apellido, direccion, celular, email)
         self.customDb.agregarRegistro(nuevoCustomer.a_dict())
-        print("Cliente creado exitosamente.")
+        console.print("Cliente creado exitosamente.", style="bold green")
 
     def listarClientes(self):
         self.limpiar_consola()
