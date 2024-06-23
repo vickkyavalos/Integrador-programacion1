@@ -70,7 +70,8 @@ class Database:
         return ultimoId + 1
     
 
-    #PARTE DE BUSQUEDA AVANZADA
+    #PARTE DE BUSQUEDA AVANZADA DE VEHICULOS
+    ########################################
     def buscarPorMarca(self, marca):
         return [vehiculo for vehiculo in self.data if vehiculo.get('marca').lower() == marca.lower()]
 
@@ -119,9 +120,22 @@ class Database:
 
         return resultados
 
-
-
-
-
     def buscarPorRangoDePrecioYEstado(self, precio_min, precio_max, estado):
         return [vehiculo for vehiculo in self.data if precio_min <= vehiculo.get('precio', 0) <= precio_max and vehiculo.get('estado').lower() == estado.lower()]
+    
+
+    #PARTE DE BUSQUEDA AVANZADA DE CLIENTES
+    #######################################
+    def buscarPorNombre(self, nombre):
+        resultados = []
+        for cliente in self.data:
+            if nombre.lower() in cliente.get('nombre', '').lower() or nombre.lower() in cliente.get('apellido', '').lower():
+                resultados.append(cliente)
+        return resultados
+    
+    def buscarPorDNI(self, dni):
+        resultados = []
+        for cliente in self.data:
+            if cliente.get('documento') == dni:
+                resultados.append(cliente)
+        return resultados
