@@ -250,59 +250,34 @@ class InterfazConcesionario:
         console.print("Cliente creado exitosamente.", style="bold green")
 
     def listarClientes(self):
+        console = Console()
         self.limpiar_consola()
-        # Mostrar todos los clientes en formato de tabla
-        clientes = self.customDb.obtenerTodosLosRegistros()
+        clientes = self.customDb.obtenerTodosLosRegistros() 
         if clientes:
-            # Obtener la longitud máxima de los datos para cada columna
-            max_lengths = {
-                "ID": max(len(str(cliente.get('id', 'N/A'))) for cliente in clientes),
-                "Nombre": max(len(cliente.get('nombre', 'N/A')) for cliente in clientes),
-                "Documento": max(len(str(cliente.get('documento', 'N/A'))) for cliente in clientes),
-                "Apellido": max(len(cliente.get('apellido', 'N/A')) for cliente in clientes),
-                "Direccion": max(len(cliente.get('direccion', 'N/A')) for cliente in clientes),
-                "Celular": max(len(cliente.get('celular', 'N/A')) for cliente in clientes),
-                "Email": max(len(cliente.get('email', 'N/A')) for cliente in clientes),
-            }
+            table = Table(show_header=True, header_style="bold blue")
+            table.add_column("ID", style="dim", width=5)
+            table.add_column("Nombre", style="dim", width=10)
+            table.add_column("Documento", style="dim", width=12)
+            table.add_column("Apellido", style="dim", width=15)
+            table.add_column("Dirección", style="dim", width=20)
+            table.add_column("Celular", style="dim", width=12)
+            table.add_column("Email", style="dim", width=25)
 
-            # Imprime los encabezados de las columnas
-            print("{:<{id_width}} {:<{nombre_width}} {:<{doc_width}} {:<{apellido_width}} {:<{direccion_width}} {:<{celular_width}} {:<{email_width}}".format(
-                "ID", "Nombre", "Documento", "Apellido", "Direccion", "Celular", "Email",
-                id_width=max_lengths["ID"] + 2, nombre_width=max_lengths["Nombre"] + 2,
-                doc_width=max_lengths["Documento"] + 2, apellido_width=max_lengths["Apellido"] + 2,
-                direccion_width=max_lengths["Direccion"] + 2, celular_width=max_lengths["Celular"] + 2,
-                email_width=max_lengths["Email"] + 2  # Agregar +2 para la columna de email también
-            ))
-
-            # Calcular la longitud de la línea divisoria
-            total_width = (
-                max_lengths["ID"] + 2 +
-                max_lengths["Nombre"] + 2 +
-                max_lengths["Documento"] + 2 +
-                max_lengths["Apellido"] + 2 +
-                max_lengths["Direccion"] + 2 +
-                max_lengths["Celular"] + 2 +
-                max_lengths["Email"] + 2  # Incluir la longitud de la columna de email
-            )
-            print("=" * total_width)  # Línea divisoria
-
-            # Imprime los datos de los clientes
             for cliente in clientes:
-                print("{:<{id_width}} {:<{nombre_width}} {:<{doc_width}} {:<{apellido_width}} {:<{direccion_width}} {:<{celular_width}} {:<{email_width}}".format(
-                    cliente.get('id', 'N/A'),
+                table.add_row(
+                    str(cliente.get('id', 'N/A')),
                     cliente.get('nombre', 'N/A'),
                     cliente.get('documento', 'N/A'),
                     cliente.get('apellido', 'N/A'),
                     cliente.get('direccion', 'N/A'),
                     cliente.get('celular', 'N/A'),
-                    cliente.get('email', 'N/A'),
-                    id_width=max_lengths["ID"] + 2, nombre_width=max_lengths["Nombre"] + 2,
-                    doc_width=max_lengths["Documento"] + 2, apellido_width=max_lengths["Apellido"] + 2,
-                    direccion_width=max_lengths["Direccion"] + 2, celular_width=max_lengths["Celular"] + 2,
-                    email_width=max_lengths["Email"] + 2  # Agregar +2 para la columna de email también
-                ))
+                    cliente.get('email', 'N/A')
+                )
+
+            console.print(table)
         else:
-            print("No hay clientes registrados.")
+            console.print("No hay clientes registrados.", style="bold red")
+
 
     def editarCustomer(self):
         #self.limpiar_consola() FRAGMENTO PARA LIMPIAR CONSOLA
@@ -419,48 +394,34 @@ class InterfazConcesionario:
             print(f"Error en la entrada de datos: {e}")
     
     def listarTransacciones(self):
+        console = Console()
         self.limpiar_consola()
 
-        transacciones = self.transaccionesDb.obtenerTodosLosRegistros()
+        transacciones = self.transaccionesDb.obtenerTodosLosRegistros()  # Obtener todos los registros de la base de datos
         if transacciones:
-        # Calcular los anchos máximos de cada columna, incluyendo los encabezados
-            max_lengths = {
-            "ID_Transaccion": max(len("ID_Transaccion"), max(len(str(transaccion.get('id_transaccion', 'N/A'))) for transaccion in transacciones)),
-            "ID_Vehiculo": max(len("ID_Vehiculo"), max(len(str(transaccion.get('id_vehiculo', 'N/A'))) for transaccion in transacciones)),
-            "ID_Cliente": max(len("ID_Cliente"), max(len(str(transaccion.get('id_cliente', 'N/A'))) for transaccion in transacciones)),
-            "Tipo_Transaccion": max(len("Tipo_Transaccion"), max(len(transaccion.get('tipo_transaccion', 'N/A')) for transaccion in transacciones)),
-            "Fecha": max(len("Fecha"), max(len(transaccion.get('fecha', 'N/A')) for transaccion in transacciones)),
-            "Monto": max(len("Monto"), max(len(str(transaccion.get('monto', 'N/A'))) for transaccion in transacciones)),
-            "Observaciones": max(len("Observaciones"), max(len(transaccion.get('observaciones', 'N/A')) for transaccion in transacciones))
-            }
+            table = Table(show_header=True, header_style="bold blue")
+            table.add_column("ID-T", style="dim", width=10)
+            table.add_column("ID-V", style="dim", width=10)
+            table.add_column("ID-C", style="dim", width=10)
+            table.add_column("Transacción", style="dim", width=15)
+            table.add_column("Fecha", style="dim", width=12)
+            table.add_column("Monto", style="dim", width=12, justify="right")
+            table.add_column("Observaciones", style="dim", width=20)
 
-            # Imprimir encabezados de la tabla
-            print("{:<{id_width}} {:<{vehiculo_width}} {:<{cliente_width}} {:<{tipo_width}} {:<{fecha_width}} {:<{monto_width}} {:<{obs_width}}".format(
-            "ID-T", "ID-V", "ID-C", "Transaccion", "Fecha", "Monto", "Observaciones",
-            id_width=max_lengths["ID_Transaccion"], vehiculo_width=max_lengths["ID_Vehiculo"],
-            cliente_width=max_lengths["ID_Cliente"], tipo_width=max_lengths["Tipo_Transaccion"],
-            fecha_width=max_lengths["Fecha"], monto_width=max_lengths["Monto"],
-            obs_width=max_lengths["Observaciones"]
-            ))
-            print("=" * (sum(max_lengths.values()) + len(max_lengths) * 2))
-
-            # Imprimir cada transacción en formato de tabla
             for transaccion in transacciones:
-                print("{:<{id_width}} {:<{vehiculo_width}} {:<{cliente_width}} {:<{tipo_width}} {:<{fecha_width}} {:<{monto_width}} {:<{obs_width}}".format(
-                    transaccion.get('id_transaccion', 'N/A'),
-                    transaccion.get('id_vehiculo', 'N/A'),
-                    transaccion.get('id_cliente', 'N/A'),
+                table.add_row(
+                    str(transaccion.get('id_transaccion', 'N/A')),
+                    str(transaccion.get('id_vehiculo', 'N/A')),
+                    str(transaccion.get('id_cliente', 'N/A')),
                     transaccion.get('tipo_transaccion', 'N/A'),
                     transaccion.get('fecha', 'N/A'),
-                    transaccion.get('monto', 'N/A'),
-                    transaccion.get('observaciones', 'N/A'),
-                    id_width=max_lengths["ID_Transaccion"], vehiculo_width=max_lengths["ID_Vehiculo"],
-                    cliente_width=max_lengths["ID_Cliente"], tipo_width=max_lengths["Tipo_Transaccion"],
-                    fecha_width=max_lengths["Fecha"], monto_width=max_lengths["Monto"],
-                    obs_width=max_lengths["Observaciones"]
-                ))
+                    f"${transaccion.get('monto', 'N/A')}",
+                    transaccion.get('observaciones', 'N/A')
+                )
+
+            console.print(table)
         else:
-            print("No hay transacciones registradas.")  
+            console.print("No hay transacciones registradas.", style="bold red")
     #Fin de funciones para transacciones
 
 
