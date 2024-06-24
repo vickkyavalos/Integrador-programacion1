@@ -1,5 +1,6 @@
 import os
 import platform
+import re
 import sys
 from vehicle import Vehicle
 from customer import Customer
@@ -63,23 +64,29 @@ class InterfazConcesionario:
             table.add_row("2", "Gestionar Clientes")
             table.add_row("3", "Registrar Transacción")
             table.add_row("4", "Busqueda avanzada de vehiculos") 
-            table.add_row("5", "Salir")
+            table.add_row("5", "Busqueda avanzada de clientes") 
+            table.add_row("6", "Busqueda avanzada de transacciones") 
+            table.add_row("7", "Salir")
             console.print(table)
 
-            choice = self.VerificacionDeEntrada("Seleccione una opción (1-5): ", None, lambda x: x in ["1", "2", "3", "4", "5"], "Opción inválida.")
+            choice = self.VerificacionDeEntrada("Seleccione una opción (1-7): ", None, lambda x: x in ["1", "2", "3", "4", "5", "6", "7"], "Opción inválida.")
             if choice == '1':
                 self.modificarVehiculos()
             elif choice == '2':
-                self.administrarCustomers()
+                self.administrarClientes()
             elif choice == '3':
                 self.administrarTransacciones()
             elif choice == '4':
                 self.busquedaAvanzada()
             elif choice == '5':
+                self.busquedaAvanzadaClientes()       
+            elif choice == '6':
+                self.busquedaAvanzadaTransacciones()
+            elif choice == '7':
                 console.print("Saliendo del sistema... [bold red]¡Adiós![/bold red]", style="bold yellow")
                 sys.exit()
             else:
-                console.print("Opción inválida, por favor inténtelo nuevamente.", style="bold red")
+                print("Opción inválida, por favor intentelo nuevamente.", style="bold red")
 
 
     ##############################
@@ -470,15 +477,29 @@ class InterfazConcesionario:
 
     #################################
     #FUNCIONES PARA BUSQUEDA AVANZADA
+    ###DE_______________VEHICULOS####
     #################################
     def mostrarVehiculos(self, vehiculos):
         if not vehiculos:
             console.print("No se encontraron vehículos.",style="bold red")
             return
+
+        for vehiculo in vehiculos:
+            patente = vehiculo.get('placa', 'N/A')
+            marca = vehiculo.get('marca', 'N/A')
+            modelo = vehiculo.get('modelo', 'N/A')
+            anio = vehiculo.get('anio', 'No disponible')
+            precio = vehiculo.get('precioVenta', 'No disponible')
+            estado = vehiculo.get('estado', 'N/A')
+
+            print(f"Patente: {patente}, Marca: {marca}, Modelo: {modelo}, Año: {anio}, Precio: {precio}, Estado: {estado}")
     
     def busquedaAvanzada(self):
         while True:
             try: 
+                panel = Panel("Busqueda avanzada", style="bold magenta", padding=(1, 2),expand=True)
+                console.print(panel, justify="center")
+                
                 
                 table = Table(show_header=True, header_style="bold blue")
                 table.add_column("Opción", style="dim", width=12)
@@ -488,42 +509,42 @@ class InterfazConcesionario:
                 table.add_row("3", "Buscar por rango de precio")
                 table.add_row("4", " Buscar por rango de precio y estado")
                 table.add_row("5", "Volver al menu principal")
+
                 console.print(table)
 
-                opcion = self.VerificacionDeEntrada("Seleccione una opcion (1-5): ", None, lambda x: x in ["1", "2", "3", "4", "5"], "Opcion invalida.")
+                opcion = self.VerificacionDeEntrada("Seleccione una opción (1-5): ", None, lambda x: x in ["1", "2", "3", "4", "5"], "Opción inválida.")
                 
                 if opcion == "1":
-                    marca = self.VerificacionDeEntrada("Ingrese la marca (deje en blanco para volver): ", None, lambda x: x == "" or x.isalpha(), "Marca invalida.")
+                    marca = self.VerificacionDeEntrada("Ingrese la marca (deje en blanco para volver): ", None, lambda x: x == "" or x.isalpha(), "Marca inválida.")
                     if marca == "":
-                        return #Volvemos al menu anterior
+                        return # Volvemos al menú anterior
                     resultados = self.vehiculosDb.buscarPorMarca(marca)
                     self.mostrarVehiculos(resultados)
                 
                 elif opcion == "2":
                     estado = self.VerificacionDeEntrada("Ingrese el estado (Disponible, Reservado, Vendido) (deje en blanco para volver): ", None, lambda x: x == "" or x.lower() in ["disponible", "reservado", "vendido"], "Estado inválido.")
                     if estado == "":
-                        return #Volver al menu anterior
+                        return # Volver al menú anterior
                     resultados = self.vehiculosDb.buscarPorEstado(estado)
                     self.mostrarVehiculos(resultados)
 
                 elif opcion == "3":
-                    precioMinimo = self.VerificacionDeEntrada("Ingrese el precio minimo (deja en blanco para volver): ", None, lambda x: x == "" or x.isdigit(), "Precio mínimo inválido.")
+                    precioMinimo = self.VerificacionDeEntrada("Ingrese el precio mínimo (deje en blanco para volver): ", None, lambda x: x == "" or x.isdigit(), "Precio mínimo inválido.")
                     if precioMinimo is None:
-                        return  # Volver al menu anterior
-                    precioMaximo = self.VerificacionDeEntrada("Ingrese el precio maximo (deje en blanco para volver): ", None, lambda x: x == "" or x.isdigit(), "Precio máximo inválido.")
+                        return  # Volver al menú anterior
+                    precioMaximo = self.VerificacionDeEntrada("Ingrese el precio máximo (deje en blanco para volver): ", None, lambda x: x == "" or x.isdigit(), "Precio máximo inválido.")
                     if precioMaximo is None:
-                        return  # Volver al menu anterior
+                        return  # Volver al menú anterior
 
-                    # Convertir a int solo si no es cadena vacía (es decir, si el usuario ingresó un valor numérico)
-                    if precioMinimo.strip():  # strip() para asegurarse de no convertir una cadena completamente vacía
+                    if precioMinimo.strip():
                         precioMinimo = int(precioMinimo)
                     else:
-                        precioMinimo = None  # Convertir a None si está vacío
+                        precioMinimo = None
 
                     if precioMaximo.strip():
                         precioMaximo = int(precioMaximo)
                     else:
-                        precioMaximo = None  # Convertir a None si está vacío
+                        precioMaximo = None
 
                     resultados = self.vehiculosDb.buscarPorRangoDePrecio(precioMinimo, precioMaximo)
                     self.mostrarVehiculos(resultados)
@@ -542,10 +563,146 @@ class InterfazConcesionario:
                     self.mostrarVehiculos(resultados)
 
                 elif opcion == "5":
-                    return #Volver al menu principal
+                    return # Volver al menú principal
                 
             except ValueError as e:
                 console.print(f"Error en la entrada de datos: {e}", style="bold red")
+
+    ################################
+    #FUNCIONES DE BUSQUEDA AVANZADA#
+    ###PARA____________CLIENTES#####
+    def mostrarClientes(self, clientes):
+        if not clientes:
+            print("No se encontraron clientes.",style = "bold red")
+            return
+        
+        for cliente in clientes:
+            print("Cliente:")
+            for key, value in cliente.items():
+                if value is not None:
+                    print(f"  {key.capitalize()}: {value}")
+            print()  # Línea en blanco para separar clientes
+
+    def busquedaAvanzadaClientes(self):
+        while True:
+            try:
+                panel = Panel("Busqueda avanzada de clientes", style="bold magenta", padding=(1, 2),expand=True)
+                console.print(panel, justify="center")
+                
+                table = Table(show_header=True, header_style="bold blue")
+                table.add_column("Opción", style="dim", width=12)
+                table.add_column("Opciones de búsqueda avanzada de clientes")
+                table.add_row("1", "Buscar por nombre")
+                table.add_row("2", "Buscar por DNI")
+                table.add_row("3", "Volver al menú principal")
+                console.print(table)
+
+                opcion = self.VerificacionDeEntrada("Seleccione una opción (1-3): ", None, lambda x: x in ["1", "2", "3"], "Opción inválida.")
+
+                if opcion == "1":
+                    nombre = self.VerificacionDeEntrada("Ingrese el nombre o apellido (deje en blanco para volver): ", None, lambda x: x == "" or x.isalpha(), "Nombre inválido.")
+                    if nombre == "":
+                        return  # Volvemos al menú anterior
+                    resultados = self.customDb.buscarPorNombre(nombre)
+                    self.mostrarClientes(resultados)
+
+                elif opcion == "2":
+                    dni = self.VerificacionDeEntrada("Ingrese el DNI (deje en blanco para volver): ", None, lambda x: x == "" or x.isdigit(), "DNI inválido.")
+                    if dni == "":
+                        return  # Volvemos al menú anterior
+                    resultados = self.customDb.buscarPorDNI(dni)
+                    self.mostrarClientes(resultados)
+
+                elif opcion == "3":
+                    return  # Volver al menú principal
+
+            except ValueError as e:
+                print(f"Error en la entrada de datos: {e}", style = "bold red")
+
+
+    ###############################
+    #FUNCIONES DE BUSQUEDA AVANZADA
+    ###PARA________TRANSACCIONES###
+    def busquedaAvanzadaTransacciones(self):
+        while True:
+            try:
+                panel = Panel("Busqueda avanzada de transacciones", style="bold magenta", padding=(1, 2),expand=True)
+                console.print(panel, justify="center")
+                
+                table = Table(show_header=True, header_style="bold blue")
+                table.add_column("Opción", style="dim", width=12)
+                table.add_column("Opciones de búsqueda avanzada de transacciones")
+                table.add_row("1", "Buscar por tipo de transacción")
+                table.add_row("2", "Buscar por rango de fechas")
+                table.add_row("3", "Buscar por rango de montos")
+                table.add_row("4", "Buscar por ID de vehículo")
+                table.add_row("5", "Buscar por ID de cliente")
+                table.add_row("6", "Volver al menú principal")
+
+                console.print(table)
+
+                opcion = self.VerificacionDeEntrada("Seleccione una opción (1-6): ", None, lambda x: x in ["1", "2", "3", "4", "5", "6"], "Opción inválida.")
+
+                if opcion == "1":
+                    tipo = self.VerificacionDeEntrada("Ingrese el tipo de transacción (venta/compra) (deje en blanco para volver): ", None, lambda x: x.lower() in ["venta", "compra", ""], "Tipo de transacción inválido.")
+                    if tipo == "":
+                        return
+                    tipo = tipo.capitalize()  # Capitalizar para que coincida con el formato en el JSON
+                    resultados = self.transaccionesDb.buscarPorTipoTransaccion(tipo)
+                    self.mostrarTransacciones(resultados)
+
+                elif opcion == "2":
+                    fecha_inicio = self.VerificacionDeEntrada("Ingrese la fecha de inicio (YYYY-MM-DD): ", None, lambda x: bool(re.match(r'\d{4}-\d{2}-\d{2}', x)), "Fecha inválida.")
+                    fecha_fin = self.VerificacionDeEntrada("Ingrese la fecha de fin (YYYY-MM-DD): ", None, lambda x: bool(re.match(r'\d{4}-\d{2}-\d{2}', x)), "Fecha inválida.")
+                    resultados = self.transaccionesDb.buscarPorRangoFecha(fecha_inicio, fecha_fin)
+                    self.mostrarTransacciones(resultados)
+
+                elif opcion == "3":
+                    monto_min = self.VerificacionDeEntrada("Ingrese el monto mínimo: ", None, lambda x: x.isdigit(), "Monto inválido.")
+                    monto_max = self.VerificacionDeEntrada("Ingrese el monto máximo: ", None, lambda x: x.isdigit(), "Monto inválido.")
+                    resultados = self.transaccionesDb.buscarPorRangoMonto(float(monto_min), float(monto_max))
+                    self.mostrarTransacciones(resultados)
+
+                elif opcion == "4":
+                    id_vehiculo = self.VerificacionDeEntrada("Ingrese el ID del vehículo: ", None, lambda x: x.isdigit(), "ID inválido.")
+                    resultados = self.transaccionesDb.buscarPorIDVehiculo(int(id_vehiculo))
+                    self.mostrarTransacciones(resultados)
+
+                elif opcion == "5":
+                    id_cliente = self.VerificacionDeEntrada("Ingrese el ID del cliente: ", None, lambda x: x.isdigit(), "ID inválido.")
+                    resultados = self.transaccionesDb.buscarPorIDCliente(int(id_cliente))
+                    self.mostrarTransacciones(resultados)
+
+                elif opcion == "6":
+                    return
+
+            except ValueError as e:
+                print(f"Error en la entrada de datos: {e}")
+
+    def mostrarTransacciones(self, transacciones):
+        if not transacciones:
+            print("No se encontraron transacciones.")
+            return
+        
+        for transaccion in transacciones:
+            id_transaccion = transaccion.get('id_transaccion', 'N/A')
+            id_vehiculo = transaccion.get('id_vehiculo', 'N/A')
+            id_cliente = transaccion.get('id_cliente', 'N/A')
+            tipo_transaccion = transaccion.get('tipo_transaccion', 'N/A')
+            fecha = transaccion.get('fecha', 'N/A')
+            monto = transaccion.get('monto', 'N/A')
+            observaciones = transaccion.get('observaciones', 'N/A')
+            print(f"\nTransacción:")
+            print(f"  ID Transacción: {id_transaccion}")
+            print(f"  ID Vehículo: {id_vehiculo}")
+            print(f"  ID Cliente: {id_cliente}")
+            print(f"  Tipo de Transacción: {tipo_transaccion}")
+            print(f"  Fecha: {fecha}")
+            print(f"  Monto: {monto}")
+            print(f"  Observaciones: {observaciones}")
+
+
+
 
 
 if __name__ == "__main__":

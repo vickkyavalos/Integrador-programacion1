@@ -70,7 +70,8 @@ class Database:
         return ultimoId + 1
     
 
-    #PARTE DE BUSQUEDA AVANZADA
+    #PARTE DE BUSQUEDA AVANZADA DE VEHICULOS
+    ########################################
     def buscarPorMarca(self, marca):
         return [vehiculo for vehiculo in self.data if vehiculo.get('marca').lower() == marca.lower()]
 
@@ -117,23 +118,52 @@ class Database:
                             resultados[index]['precioVenta'] = vehiculo['precioVenta']
                         break
 
-        # Imprimimos los resultados encontrados
-        print(f"Vehículos encontrados en el rango de precio [{precio_min}, {precio_max}] y estado '{estado}':")
-        for vehiculo in resultados:
-            patente = vehiculo.get('placa', 'N/A')
-            marca = vehiculo.get('marca', 'N/A')
-            modelo = vehiculo.get('modelo', 'N/A')
-            anio = vehiculo.get('anio', 'No disponible')
-            precio = vehiculo.get('precioVenta', 'No disponible')
-            estado = vehiculo.get('estado', 'N/A')
-
-            print(f"Patente: {patente}, Marca: {marca}, Modelo: {modelo}, Año: {anio}, Precio: {precio}, Estado: {estado}")
-
         return resultados
-
-
-
-
 
     def buscarPorRangoDePrecioYEstado(self, precio_min, precio_max, estado):
         return [vehiculo for vehiculo in self.data if precio_min <= vehiculo.get('precio', 0) <= precio_max and vehiculo.get('estado').lower() == estado.lower()]
+    
+
+    #PARTE DE BUSQUEDA AVANZADA DE CLIENTES
+    #######################################
+    def buscarPorNombre(self, nombre):
+        resultados = []
+        for cliente in self.data:
+            if nombre.lower() in cliente.get('nombre', '').lower() or nombre.lower() in cliente.get('apellido', '').lower():
+                resultados.append(cliente)
+        return resultados
+    
+    def buscarPorDNI(self, dni):
+        resultados = []
+        for cliente in self.data:
+            if cliente.get('documento') == dni:
+                resultados.append(cliente)
+        return resultados
+    
+
+
+    #PARTE DE BUSQUEDA AVANZADA DE TRANSACCIONES
+    ############################################
+    def buscarPorTipoTransaccion(self, tipo):
+        resultados = [transaccion for transaccion in self.data if transaccion.get('tipo_transaccion') == tipo]
+        return resultados
+
+    def buscarPorRangoFecha(self, fecha_inicio, fecha_fin):
+        resultados = []
+        for transaccion in self.data:
+            fecha_transaccion = transaccion.get('fecha')
+            if fecha_inicio <= fecha_transaccion <= fecha_fin:
+                resultados.append(transaccion)
+        return resultados
+
+    def buscarPorRangoMonto(self, monto_min, monto_max):
+        resultados = [transaccion for transaccion in self.data if monto_min <= transaccion.get('monto', 0) <= monto_max]
+        return resultados
+
+    def buscarPorIDVehiculo(self, id_vehiculo):
+        resultados = [transaccion for transaccion in self.data if transaccion.get('id_vehiculo') == id_vehiculo]
+        return resultados
+
+    def buscarPorIDCliente(self, id_cliente):
+        resultados = [transaccion for transaccion in self.data if transaccion.get('id_cliente') == id_cliente]
+        return resultados
