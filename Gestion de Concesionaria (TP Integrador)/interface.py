@@ -49,15 +49,13 @@ class InterfazConcesionario:
 
     #Inicio del main menu
     def mainMenu(self):
-
-        console = Console()
         
-        panel = Panel("Sistema de Gestión de Concesionaria de Vehículos Usados", style="bold magenta", padding=(1, 2),
-        expand=True)
-        console.print(panel, justify="center")
+        self.limpiar_consola()
+        while True: 
 
-        while True:
-            
+            panel = Panel("Sistema de Gestión de Concesionaria de Vehículos Usados", style="bold magenta", padding=(1, 2),expand=True)
+            console.print(panel, justify="center")
+
             table = Table(show_header=True, header_style="bold blue")
             table.add_column("Opción", style="dim", width=12)
             table.add_column("Descripción")
@@ -92,9 +90,12 @@ class InterfazConcesionario:
     
     #Inicio de funciones para vehiculos
     def modificarVehiculos(self):
-        
+
         self.limpiar_consola()
         while True:
+
+            panel = Panel("Gestión de vehiculos", style="bold magenta", padding=(1, 2),expand=True)
+            console.print(panel, justify="center")
 
             table = Table(show_header=True, header_style="bold blue")
             table.add_column("Opción", style="dim", width=12)
@@ -239,6 +240,9 @@ class InterfazConcesionario:
         # similar a modificarVehiculos
         while True:
 
+            panel = Panel("Gestión de clientes", style="bold magenta", padding=(1, 2),expand=True)
+            console.print(panel, justify="center")
+
             table = Table(show_header=True, header_style="bold blue")
             table.add_column("Opción", style="dim", width=12)
             table.add_column("Descripción")
@@ -379,8 +383,14 @@ class InterfazConcesionario:
 
     #Inicio de funciones para transacciones
     def administrarTransacciones(self):
+
         self.limpiar_consola()
+
         while True:
+
+            panel = Panel("Gestión de transacciones", style="bold magenta", padding=(1, 2),expand=True)
+            console.print(panel, justify="center")
+
             table = Table(show_header=True, header_style="bold blue")
             table.add_column("Opción", style="dim", width=12)
             table.add_column("Descripción")
