@@ -86,7 +86,7 @@ class InterfazConcesionario:
                 console.print("Saliendo del sistema... [bold red]¡Adiós![/bold red]", style="bold yellow")
                 sys.exit()
             else:
-                print("Opción inválida, por favor intentelo nuevamente.", style="bold red")
+                console.print("Opción inválida, por favor intentelo nuevamente.", style="bold red")
 
 
     ##############################
