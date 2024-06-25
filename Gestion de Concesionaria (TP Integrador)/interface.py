@@ -73,7 +73,7 @@ class InterfazConcesionario:
             if choice == '1':
                 self.modificarVehiculos()
             elif choice == '2':
-                self.administrarClientes()
+                self.administrarCustomers()
             elif choice == '3':
                 self.administrarTransacciones()
             elif choice == '4':
@@ -272,7 +272,7 @@ class InterfazConcesionario:
             elif choice == '5':
                 return
             else:
-                print("Opcion invalida, por favor intente nuevamente.", style= "bold red")
+                console.print("Opcion invalida, por favor intente nuevamente.", style= "bold red")
 
     def crearCustomer(self):
         self.limpiar_consola()
@@ -574,7 +574,7 @@ class InterfazConcesionario:
     ###PARA____________CLIENTES#####
     def mostrarClientes(self, clientes):
         if not clientes:
-            print("No se encontraron clientes.",style = "bold red")
+            console.print("No se encontraron clientes.",style = "bold red")
             return
         
         for cliente in clientes:
@@ -618,7 +618,7 @@ class InterfazConcesionario:
                     return  # Volver al menú principal
 
             except ValueError as e:
-                print(f"Error en la entrada de datos: {e}", style = "bold red")
+                console.print(f"Error en la entrada de datos: {e}", style = "bold red")
 
 
     ###############################
