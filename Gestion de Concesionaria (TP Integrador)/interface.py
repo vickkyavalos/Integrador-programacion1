@@ -57,11 +57,11 @@ class InterfazConcesionario:
             if choice == '1':
                 self.modificarVehiculos()
             elif choice == '2':
-                self.administrarClientes()
+                self.administrarCustomers()
             elif choice == '3':
                 self.administrarTransacciones()
             elif choice == '4':
-                self.busquedaAvanzadaVehiculos()
+                self.busquedaAvanzada()
             elif choice == '5':
                 self.busquedaAvanzadaClientes()
             elif choice == '6':
