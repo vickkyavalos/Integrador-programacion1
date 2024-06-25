@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 
 def transformarPatente(patente):
     return patente.upper()
@@ -31,3 +32,19 @@ def validarPrecio(precio):
 def validarEstado(estado):
     estados_validos = ['Disponible', 'Reservado', 'Vendido']
     return estado in estados_validos
+
+def validarTipoTransaccion(tipo):
+    tipos = ['Venta', 'Compra']
+    return tipo in tipos
+
+def validarFecha(fecha):
+    try:
+        datetime.strptime(fecha, '%Y-%m-%d')
+        return True
+    except ValueError:
+        return False
+
+def validarObservaciones(observaciones):
+    if len(observaciones) < 5:
+        return False
+    return True

@@ -423,10 +423,11 @@ class InterfazConcesionario:
             id_transaccion = len(self.transaccionesDb.obtenerTodosLosRegistros()) + 1
             id_vehiculo = int(input("Ingrese el ID del vehículo: "))
             id_cliente = int(input("Ingrese el ID del cliente: "))
-            tipo_transaccion = input("Ingrese el tipo de transacción (Venta/Compra): ")
-            fecha = input("Ingrese la fecha de la transacción (YYYY-MM-DD): ")
-            monto = float(input("Ingrese el monto de la transacción: "))
-            observaciones = input("Ingrese observaciones sobre la transacción: ")
+            tipo_transaccion = self.VerificacionDeEntrada("Ingrese el tipo de transacción (Venta/Compra): ", "", validadores.validarTipoTransaccion, "Estado invalido.")
+            fecha = self.VerificacionDeEntrada("Ingrese la fecha de la transacción (YYYY-MM-DD):  ", "", validadores.validarFecha, "Por favor ingrese una fecha válida (YYYY-MM-DD)")
+            monto =  self.VerificacionDeEntrada("Ingrese el monto de la transacción: ", "", validadores.validarPrecio, "Precio de venta invalido. Debe ser un número positivo.")
+            observaciones = self.VerificacionDeEntrada("Ingrese observaciones sobre la transacción: ", "",validadores.validarObservaciones, 
+            "Las observaciones deben tener al menos 5 letras.")
 
             nueva_transaccion = {
                 "id_transaccion": id_transaccion,
