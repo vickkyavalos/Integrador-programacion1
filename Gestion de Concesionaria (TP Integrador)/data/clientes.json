@@ -6,7 +6,9 @@
         "documento": "12345678",
         "direccion": "Calle Falsa 123",
         "celular": "123-4567",
-        "email": "juan.perez@example.com"
+        "email": "juan.perez@example.com",
+        "anio": null,
+        "precioVenta": null
     },
     {
         "id": 2,
@@ -15,7 +17,9 @@
         "documento": "87654321",
         "direccion": "Avenida Siempreviva 742",
         "celular": "987-6543",
-        "email": "maria.gomez@example.com"
+        "email": "maria.gomez@example.com",
+        "anio": null,
+        "precioVenta": null
     },
     {
         "id": 4,
@@ -24,7 +28,9 @@
         "apellido": "picaPiedras",
         "direccion": "Albaricoque 2145",
         "celular": "2997654532",
-        "email": "PPP@cavernicola.com.piedra"
+        "email": "PPP@cavernicola.com.piedra",
+        "anio": null,
+        "precioVenta": null
     },
     {
         "id": 5,
@@ -33,7 +39,9 @@
         "apellido": "pepe",
         "direccion": "heizen 2876",
         "celular": "1234500000",
-        "email": "asd@asd.com"
+        "email": "asd@asd.com",
+        "anio": null,
+        "precioVenta": null
     },
     {
         "id": 6,
@@ -42,6 +50,8 @@
         "apellido": "Cors",
         "direccion": "atahualpa 2345",
         "celular": "12345654332",
-        "email": "nicoCors@gmail.com"
+        "email": "nicoCors@gmail.com",
+        "anio": null,
+        "precioVenta": null
     }
 ]

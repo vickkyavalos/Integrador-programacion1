@@ -70,5 +70,23 @@
         "fecha": "2024-07-15",
         "monto": 10000.0,
         "observaciones": "Venta realizada"
+    },
+    {
+        "id_transaccion": 9,
+        "id_vehiculo": 10,
+        "id_cliente": 3,
+        "tipo_transaccion": "venta",
+        "fecha": "2024-05-11",
+        "monto": 80000.0,
+        "observaciones": "Venta realizada"
+    },
+    {
+        "id_transaccion": 10,
+        "id_vehiculo": 5,
+        "id_cliente": 3,
+        "tipo_transaccion": "venta",
+        "fecha": "2024-12-07",
+        "monto": 25000.0,
+        "observaciones": "venta completa"
     }
 ]
