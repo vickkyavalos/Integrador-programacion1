@@ -485,6 +485,14 @@ class InterfazConcesionario:
             console.print("No se encontraron vehículos.",style="bold red")
             return
 
+        table = Table(show_header=True, header_style="bold blue")
+        table.add_column("Patente", style="dim", width=12)
+        table.add_column("Marca", style="dim", width=12)
+        table.add_column("Modelo", style="dim", width=20)
+        table.add_column("Año", style="dim", width=10)
+        table.add_column("Precio", style="dim", width=15, justify="right")
+        table.add_column("Estado", style="dim", width=15)
+
         for vehiculo in vehiculos:
             patente = vehiculo.get('placa', 'N/A')
             marca = vehiculo.get('marca', 'N/A')
@@ -493,7 +501,19 @@ class InterfazConcesionario:
             precio = vehiculo.get('precioVenta', 'No disponible')
             estado = vehiculo.get('estado', 'N/A')
 
-            print(f"Patente: {patente}, Marca: {marca}, Modelo: {modelo}, Año: {anio}, Precio: {precio}, Estado: {estado}")
+        table.add_row(
+            str(patente),
+            str(marca),
+            str(modelo),
+            str(anio),
+            str(precio),
+            str(estado)
+            )
+
+        console.print(table)
+
+
+            #print(f"Patente: {patente}, Marca: {marca}, Modelo: {modelo}, Año: {anio}, Precio: {precio}, Estado: {estado}")
     
     def busquedaAvanzada(self):
         while True:
@@ -578,7 +598,7 @@ class InterfazConcesionario:
             return
         
         for cliente in clientes:
-            print("Cliente:")
+            console.print("Cliente:",style = "bold cyan")
             for key, value in cliente.items():
                 if value is not None:
                     print(f"  {key.capitalize()}: {value}")
@@ -684,7 +704,16 @@ class InterfazConcesionario:
         if not transacciones:
             print("No se encontraron transacciones.")
             return
-        
+
+        table = Table(show_header=True, header_style="bold blue")
+        table.add_column("ID Transacción", style="dim", width=10)
+        table.add_column("ID Vehiculo", style="dim", width=10)
+        table.add_column("ID Cliente", style="dim", width=10)
+        table.add_column("Transacción", style="dim", width=15)
+        table.add_column("Fecha", style="dim", width=12)
+        table.add_column("Monto", style="dim", width=12, justify="right")
+        table.add_column("Observaciones", style="dim", width=20)
+
         for transaccion in transacciones:
             id_transaccion = transaccion.get('id_transaccion', 'N/A')
             id_vehiculo = transaccion.get('id_vehiculo', 'N/A')
@@ -693,14 +722,17 @@ class InterfazConcesionario:
             fecha = transaccion.get('fecha', 'N/A')
             monto = transaccion.get('monto', 'N/A')
             observaciones = transaccion.get('observaciones', 'N/A')
-            print(f"\nTransacción:")
-            print(f"  ID Transacción: {id_transaccion}")
-            print(f"  ID Vehículo: {id_vehiculo}")
-            print(f"  ID Cliente: {id_cliente}")
-            print(f"  Tipo de Transacción: {tipo_transaccion}")
-            print(f"  Fecha: {fecha}")
-            print(f"  Monto: {monto}")
-            print(f"  Observaciones: {observaciones}")
+            table.add_row(
+                str(id_transaccion),
+                str(id_vehiculo),
+                str(id_cliente),
+                str(tipo_transaccion),
+                str(fecha),
+                str(monto),
+                str(observaciones)
+            )
+        
+        console.print(table)
 
 
 
