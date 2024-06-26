@@ -451,9 +451,9 @@ class InterfazConcesionario:
         transacciones = self.transaccionesDb.obtenerTodosLosRegistros()  # Obtener todos los registros de la base de datos
         if transacciones:
             table = Table(show_header=True, header_style="bold blue")
-            table.add_column("ID-T", style="dim", width=10)
-            table.add_column("ID-V", style="dim", width=10)
-            table.add_column("ID-C", style="dim", width=10)
+            table.add_column("ID Transacciones", style="dim", width=10)
+            table.add_column("ID Vehiculos", style="dim", width=10)
+            table.add_column("ID Clientes", style="dim", width=10)
             table.add_column("Transacción", style="dim", width=15)
             table.add_column("Fecha", style="dim", width=12)
             table.add_column("Monto", style="dim", width=12, justify="right")
