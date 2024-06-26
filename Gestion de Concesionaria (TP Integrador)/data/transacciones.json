@@ -6,9 +6,7 @@
         "tipo_transaccion": "Venta",
         "fecha": "2024-01-15",
         "monto": 15000,
-        "observaciones": "Venta realizada con exito.",
-        "anio": null,
-        "precioVenta": null
+        "observaciones": "Venta realizada con exito."
     },
     {
         "id_transaccion": 2,
@@ -17,9 +15,7 @@
         "tipo_transaccion": "Compra",
         "fecha": "2024-01-20",
         "monto": 14000,
-        "observaciones": "Compra registrada.",
-        "anio": null,
-        "precioVenta": null
+        "observaciones": "Compra registrada."
     },
     {
         "id_transaccion": 4,
@@ -28,9 +24,7 @@
         "tipo_transaccion": "venta",
         "fecha": "2003/09/12",
         "monto": 20000.0,
-        "observaciones": "Venta registrada",
-        "anio": null,
-        "precioVenta": null
+        "observaciones": "Venta registrada"
     },
     {
         "id_transaccion": 4,
@@ -39,9 +33,7 @@
         "tipo_transaccion": "Compra",
         "fecha": "2037/98/01",
         "monto": 100000.0,
-        "observaciones": "Compra registrada",
-        "anio": null,
-        "precioVenta": null
+        "observaciones": "Compra registrada"
     },
     {
         "id_transaccion": 5,
@@ -50,9 +42,7 @@
         "tipo_transaccion": "Venta",
         "fecha": "2024-12-09",
         "monto": 100000.0,
-        "observaciones": "Vendido",
-        "anio": null,
-        "precioVenta": null
+        "observaciones": "Vendido"
     },
     {
         "id_transaccion": 6,
@@ -61,9 +51,7 @@
         "tipo_transaccion": "Venta",
         "fecha": "2024-07-08",
         "monto": 250000.0,
-        "observaciones": "Vendido correctamente",
-        "anio": null,
-        "precioVenta": null
+        "observaciones": "Vendido correctamente"
     },
     {
         "id_transaccion": 7,
@@ -72,9 +60,7 @@
         "tipo_transaccion": "Compra",
         "fecha": "2024-07-11",
         "monto": 3000000.0,
-        "observaciones": "Compra realizada",
-        "anio": null,
-        "precioVenta": null
+        "observaciones": "Compra realizada"
     },
     {
         "id_transaccion": 8,
@@ -83,9 +69,7 @@
         "tipo_transaccion": "Venta",
         "fecha": "2024-07-15",
         "monto": 10000.0,
-        "observaciones": "Venta realizada",
-        "anio": null,
-        "precioVenta": null
+        "observaciones": "Venta realizada"
     },
     {
         "id_transaccion": 9,
@@ -95,5 +79,14 @@
         "fecha": "2024-05-11",
         "monto": 80000.0,
         "observaciones": "Venta realizada"
+    },
+    {
+        "id_transaccion": 10,
+        "id_vehiculo": 5,
+        "id_cliente": 3,
+        "tipo_transaccion": "venta",
+        "fecha": "2024-12-07",
+        "monto": 25000.0,
+        "observaciones": "venta completa"
     }
 ]
